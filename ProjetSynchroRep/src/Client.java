@@ -33,7 +33,7 @@ public class Client {
 	
 		try
 		{
-			_port   = (args.length == 1) ? Integer.parseInt(args[0]) : 8080;
+			_port   = (args.length == 1) ? Integer.parseInt(args[0]) : 8099;
 			_socket = new Socket((String) null, _port);
 			
 			// Open stream

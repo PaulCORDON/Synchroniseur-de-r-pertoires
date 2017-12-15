@@ -4,44 +4,48 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Serveur implements Runnable{
+public class Serveur{
+
+	private static int           _port;
+	private static ServerSocket  _socket;
 	
-	private final int port = 1996;
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Thread t=new Thread(new Serveur());
-		t.start();
-	}
-	@Override
-	public void run(){
-		try {
-			ServerSocket listener = new ServerSocket(8080);
-			int i =0;
-			while(i < 2) {
-				Socket aClient = listener.accept();
-				ClientManager cm = new ClientManager(aClient);
-				cm.start();
-				/*InputStream in = aClient.getInputStream();
-				BufferedReader pout = new BufferedReader(new InputStreamReader(in));
-				OutputStream out = aClient.getOutputStream();
-				System.out.print("test");
-				String line = pout.readLine();
+
+	public static void main(String[] args)
+	{
+		
+		try
+		{
+			_port   = (args.length == 1) ? Integer.parseInt(args[0]) : 8099;
+			_socket = new ServerSocket(_port);
+
+			System.out.println("TCP server is running on " + _port + "...");
+
+			while (true)
+			{
+				// Accept new TCP client
+				Socket client       = _socket.accept();
+				 ClientManager th= new ClientManager(client);
 				
-				BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(out));
-				wr.write(line);
-				if(line == "STOP") {
-					i++;
-					aClient.close();
-				}*/
+				System.out.println("New client, address " + client.getInetAddress() + " on " + client.getPort() + ".");
+				th.start();
 			}
-			listener.close();
-		}catch(UnknownHostException e) {
-			System.out.println(e.toString());
-		}catch(IOException e) {
-			System.out.println(e.toString());
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				_socket.close();
+		
+
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
-	
-	
 }
