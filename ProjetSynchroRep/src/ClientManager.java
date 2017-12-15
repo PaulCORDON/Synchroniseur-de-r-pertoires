@@ -2,13 +2,21 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientManager extends Thread {
+	Socket client;
 	
-	public void run(Socket s){
+	public ClientManager(Socket cl) {
+		client=cl;		
+	}
+	
+	public void run(){
+		
 		try{
-			InputStream in = s.getInputStream();
-			BufferedReader bf = new BufferedReader(new InputStreamReader(in));
-			String line = bf.readLine();
-			System.out.println(line);
+			System.out.println("coucou");
+				
+			InputStream input=client.getInputStream();
+			String lu = new BufferedReader(new InputStreamReader(input)).readLine();
+			System.out.println(lu);
+
 		}catch(Exception e){
 			System.out.println(e.toString());
 		}
