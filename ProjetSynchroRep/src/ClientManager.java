@@ -62,11 +62,11 @@ public class ClientManager extends Thread {
 		String lu=null;
 		String type="inconnu";
 		try{
-			
+			System.out.println("test");
 			/*on recupere le pseudo de l'utilisateur*/
 			InputStream input=client.getInputStream();
 			lu = new BufferedReader(new InputStreamReader(input)).readLine();
-			
+			System.out.println(lu);
 			for(utilisateur u:comptes){
 				if(u.id.equals(lu)){
 					type=u.type;

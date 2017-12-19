@@ -1,9 +1,11 @@
 
-public class Maitre extends Client{
+public class Maitre  extends Thread{
 	String id;
-	Maitre(String st) {
-		super(st);
+	
+	Maitre(String st) {		
 		id=st;
 	}
-
+	public void run(){
+		System.out.println("Je suis un maitre");
+	}
 }

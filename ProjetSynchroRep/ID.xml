@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<utilisateurs>
 		<utilisateur pseudo="polo" type="maitre"/>
-		<utilisateur pseudo="polo2" type="client"/>
+		<utilisateur pseudo="polo2" type="esclave"/>
 	</utilisateurs>
