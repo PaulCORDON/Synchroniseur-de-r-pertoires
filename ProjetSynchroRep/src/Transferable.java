@@ -6,11 +6,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public interface Transferable {
+public class Transferable {
 	
-	String repository = "C:/";
 	
-	public static void infoRepo(){
+	public static void infoRepo(String repository){
 		try{
 			//Path chemin = Paths.get(repository);
 			
@@ -39,7 +38,7 @@ public interface Transferable {
 		}
 	}
 	
-	public static void infoRepo(PrintWriter pw) {
+	public static void infoRepo(String repository, PrintWriter pw) {
 		try{
 			//Path chemin = Paths.get(repository);
 			
@@ -84,7 +83,7 @@ public interface Transferable {
 		}
 	}
 	
-	public static void listen(PrintWriter pw, BufferedReader br) {
+	public static void listen(String repository, PrintWriter pw, BufferedReader br) {
 		String cmd = null;
 		while(cmd != "STOP") {
 			try {
@@ -92,7 +91,7 @@ public interface Transferable {
 			
 				switch(cmd) {
 				case "askRepo" : {
-					infoRepo(pw);
+					infoRepo(repository, pw);
 				}
 				}
 			} catch (IOException e) {
