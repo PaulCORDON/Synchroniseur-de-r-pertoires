@@ -1,15 +1,19 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+
 public class Transferable {
 	
 	protected String repository;
 	
+	//affiche les infos sur son répertoire
 	public void infoRepo(){
 		try{
 			//Path chemin = Paths.get(repository);
@@ -39,7 +43,8 @@ public class Transferable {
 		}
 	}
 	
-	public void infoRepo(PrintWriter pw) {
+	//envoie les infos sur son répertoire à son processus interlocuteur
+	public void infoRepo(PrintWriter pw) {						
 		try{
 			//Path chemin = Paths.get(repository);
 			
@@ -69,7 +74,8 @@ public class Transferable {
 		}
 	}
 	
-	public void askRepo(PrintWriter pw, BufferedReader br) {
+	//askRepo demande au processus avec lequel il discute les informations sur son répertoire
+	public void askRepo(PrintWriter pw, BufferedReader br) {		
 		pw.print("askRepo");
 		String line = "";
 		while(line != "end") {
@@ -84,7 +90,27 @@ public class Transferable {
 		}
 	}
 	
-	public void listen(PrintWriter pw, BufferedReader br) {
+	public void push(OutputStream os) {
+		//transfert(new FileInputStream(repository))
+	}
+	
+	 public void transfert(InputStream in, OutputStream out, boolean closeOnExit) throws IOException
+	    {
+	        byte buf[] = new byte[1024];
+	        
+	        int n;
+	        while((n=in.read(buf))!=-1)
+	            out.write(buf,0,n);
+	        
+	        if (closeOnExit)
+	        {
+	            in.close();
+	            out.close();
+	        }
+	    }
+	
+	//attend des commandes de la part du processus avec qui il discute
+	public void listen(PrintWriter pw, BufferedReader br) {			
 		String cmd = null;
 		while(cmd != "STOP") {
 			try {
