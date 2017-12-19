@@ -31,7 +31,7 @@ public class Client {
 	
 	public static void main(String[] args) throws InterruptedException{	
 		
-		//new Client("50").recep(0);
+		//new Client("50").infoRepo();
 		
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Quel est votre ID?");
@@ -81,32 +81,5 @@ public class Client {
 		}
 	}
 	
-	public void recep(int mode){
-		try{
-			//Path chemin = Paths.get(repository);
-			
-			Path roots = FileSystems.getDefault().getPath(repository);
-			//Maintenant, il ne nous reste plus qu'à parcourir
-			
-			  System.out.println(roots);
-			  //Pour lister un répertoire, il faut utiliser l'objet DirectoryStream
-			  //L'objet Files permet de créer ce type d'objet afin de pouvoir l'utiliser
-			  try(DirectoryStream<Path> listing = Files.newDirectoryStream(roots)){
-			    int i = 0;
-			    for(Path nom : listing){
-			    	if(Files.size(nom)>0){
-			      System.out.print("\t\t" + ((Files.isDirectory(nom)) ? nom+"/" : nom));
-			      System.out.println(" ["+Files.size(nom)+" octets]");
-			      System.out.print(" ,last modification : "+Files.getLastModifiedTime(nom)+"\n");
-			      i++;
-			      if(i%4 == 0)System.out.println("\n");
-			      }
-			    }
-			  } catch (IOException e) {
-			    e.printStackTrace();
-			  }
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
+	
 }
