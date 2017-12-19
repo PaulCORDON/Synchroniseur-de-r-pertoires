@@ -8,8 +8,9 @@ import java.nio.file.Path;
 
 public class Transferable {
 	
+	protected String repository;
 	
-	public static void infoRepo(String repository){
+	public void infoRepo(){
 		try{
 			//Path chemin = Paths.get(repository);
 			
@@ -38,7 +39,7 @@ public class Transferable {
 		}
 	}
 	
-	public static void infoRepo(String repository, PrintWriter pw) {
+	public void infoRepo(PrintWriter pw) {
 		try{
 			//Path chemin = Paths.get(repository);
 			
@@ -68,7 +69,7 @@ public class Transferable {
 		}
 	}
 	
-	public static void askRepo(PrintWriter pw, BufferedReader br) {
+	public void askRepo(PrintWriter pw, BufferedReader br) {
 		pw.print("askRepo");
 		String line = "";
 		while(line != "end") {
@@ -83,7 +84,7 @@ public class Transferable {
 		}
 	}
 	
-	public static void listen(String repository, PrintWriter pw, BufferedReader br) {
+	public void listen(PrintWriter pw, BufferedReader br) {
 		String cmd = null;
 		while(cmd != "STOP") {
 			try {
@@ -91,7 +92,7 @@ public class Transferable {
 			
 				switch(cmd) {
 				case "askRepo" : {
-					infoRepo(repository, pw);
+					infoRepo(pw);
 				}
 				}
 			} catch (IOException e) {
