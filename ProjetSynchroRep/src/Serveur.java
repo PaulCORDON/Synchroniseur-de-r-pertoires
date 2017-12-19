@@ -24,7 +24,7 @@ public class Serveur{
 			{
 				// Accept new TCP client
 				Socket client       = _socket.accept();
-				 ClientManager th= new ClientManager(client);
+				ClientManager th= new ClientManager(client);
 				
 				System.out.println("New client, address " + client.getInetAddress() + " on " + client.getPort() + ".");
 				th.start();
