@@ -60,7 +60,7 @@ public class Transferable {
 					    if(i%4 == 0)System.out.println("\n");
 			    	}
 			    }
-			    System.out.println("end");
+			    pw.println("end");
 			  } catch (IOException e) {
 				  e.printStackTrace();
 			  }
@@ -84,16 +84,21 @@ public class Transferable {
 		}
 	}
 	
-	public void listen(PrintWriter pw, BufferedReader br) {
+	public void listen(PrintWriter pw, BufferedReader br) throws InterruptedException {
 		String cmd = null;
 		while(cmd != "STOP") {
 			try {
-				cmd = br.readLine();
-			
-				switch(cmd) {
-				case "askRepo" : {
-					infoRepo(pw);
-				}
+				System.out.println("coucou1");
+				if(br.ready()) {
+					cmd = br.readLine();
+								
+					System.out.println("coucou2");
+					switch(cmd) {
+						case "askRepo" : {
+							infoRepo(pw);
+							break;
+						}
+					}
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

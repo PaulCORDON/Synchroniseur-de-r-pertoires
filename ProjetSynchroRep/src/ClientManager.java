@@ -12,14 +12,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class ClientManager extends Thread {
+public class ClientManager extends Transferable implements Runnable {
 	Socket client;
 	ArrayList<utilisateur> comptes=new ArrayList<utilisateur>();
 	
 	
 
 	public ClientManager(Socket cl) {
-		client=cl;		
+		client=cl;	
+		repository="H:/";	
 	}
 	
 	public void run(){
@@ -58,29 +59,28 @@ public class ClientManager extends Thread {
 
 		}
 
-		/*on recupere le pseudo de l'utilisateur*/
+		/*On recupere le pseudo de l'utilisateur*/
 		String lu=null;
 		String type="inconnu";
 		try{
-			System.out.println("test");
-			/*on recupere le pseudo de l'utilisateur*/
+			
+			/*On recupere le pseudo de l'utilisateur*/
 			InputStream input=client.getInputStream();
-			lu = new BufferedReader(new InputStreamReader(input)).readLine();
+			BufferedReader br=new BufferedReader(new InputStreamReader(input));
+			lu=br.readLine();
 			System.out.println(lu);
 			for(utilisateur u:comptes){
 				if(u.id.equals(lu)){
 					type=u.type;
 				}
 			}
-			
-			
+			/*On lui retourne maitre esclave ou inconnue*/
 			OutputStream output = client.getOutputStream();	
 			PrintWriter rep =new PrintWriter(new OutputStreamWriter(output));			
 			rep.println(type);
 			rep.flush();
-			System.out.println(type);
-			
-			
+			System.out.println(type);			
+			listen(rep,br);
 		}
 		catch(Exception e){
 			System.out.println(e.toString());

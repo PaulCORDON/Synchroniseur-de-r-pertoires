@@ -27,7 +27,7 @@ public class Serveur{
 				ClientManager th= new ClientManager(client);
 				
 				System.out.println("New client, address " + client.getInetAddress() + " on " + client.getPort() + ".");
-				th.start();
+				th.run();
 			}
 		}
 		catch (IOException e)

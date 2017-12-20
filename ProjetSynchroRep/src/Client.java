@@ -59,12 +59,12 @@ public class Client {
 			lu=br.readLine();
 			System.out.println(lu);
 			if(lu.equals("maitre")) {
-				Maitre maitre=new Maitre(cl.id);
-				maitre.start();
+				Maitre maitre=new Maitre(cl.id,br,bw,_socket);
+				maitre.run();
 			}
 			else if(lu.equals("esclave")) {
-				Esclave esclave=new Esclave(cl.id);
-				esclave.start();
+				Esclave esclave=new Esclave(cl.id,br,bw,_socket);
+				esclave.run();
 			}
 			else{
 				System.out.println("Vous n'etes pas client");
