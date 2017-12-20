@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 public class ClientManager extends Transferable implements Runnable {
 	Socket client;
 	ArrayList<utilisateur> comptes=new ArrayList<utilisateur>();
-	
+	File frec= new File("H:/Mes documents/4A/TestReseau/Serveur/Recu.odt");
 	
 
 	public ClientManager(Socket cl) {
@@ -79,12 +79,18 @@ public class ClientManager extends Transferable implements Runnable {
 			PrintWriter rep =new PrintWriter(new OutputStreamWriter(output));			
 			rep.println(type);
 			rep.flush();
-			System.out.println(type);			
-			listen(rep,br);
+			System.out.println(type);	
+			pull(frec);
+			
 		}
 		catch(Exception e){
 			System.out.println(e.toString());
 		}
 		
+	}
+
+
+	private void pull(File f)throws IOException {        
+		transfert(client.getInputStream(),new FileOutputStream(f),true); 
 	}
 }
