@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,13 +25,16 @@ public class Maitre  extends Transferable implements Runnable{
 	}
 	
 	public void run(){
-		Scanner sc= new Scanner(System.in);		
-		System.out.println("Path Repo :");
-		repository=sc.nextLine();		
-		sc.close();		
-		infoRepo();
-		askRepo(bw,br);
+		File fenv= new File("H:/Mes documents/4A/TestReseau/Client/aEnvoyer.odt");
 		
+		
+		try {
+			push(fenv);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		
@@ -38,34 +43,13 @@ public class Maitre  extends Transferable implements Runnable{
 	}
 	
 	
-	public static void transfert(InputStream in, OutputStream out, boolean closeOnExit) throws IOException  {
-  
-        byte buf[] = new byte[1024];
-        
-        int n;
-        while((n=in.read(buf))!=-1) {
-        	out.write(buf,0,n);
-        }
-            
-        
-        if (closeOnExit){
-            in.close();
-            out.close();
-        }
-    }
- /* 
-	private void push(File f)throws IOException {
-	
-	  
-        Commun.transfert(
-                new FileInputStream("D:\\test.jpg"),
-                _socket.getOutputStream(),
-                true);
-        
-        _socket.close();
+
+ 
+	private void push(File f)throws IOException {	  
+        transfert(new FileInputStream(f),_socket.getOutputStream(),true);
 	}
 
-	private void pull() {
-		
-	}*/
+	private void pull(File f)throws IOException {        
+        transfert(_socket.getInputStream(),new FileOutputStream(f),true); 
+	}
 }
