@@ -13,17 +13,17 @@ public class Transferable {
 	
 	protected String repository;
 	
-	//affiche les infos sur son répertoire
+	//affiche les infos sur son rï¿½pertoire
 	public void infoRepo(){
 		try{
 			//Path chemin = Paths.get(repository);
 			
 			Path roots = FileSystems.getDefault().getPath(repository);
-			//Maintenant, il ne nous reste plus qu'à parcourir
+			//Maintenant, il ne nous reste plus qu'ï¿½ parcourir
 			
 			  System.out.println(roots);
-			  //Pour lister un répertoire, il faut utiliser l'objet DirectoryStream
-			  //L'objet Files permet de créer ce type d'objet afin de pouvoir l'utiliser
+			  //Pour lister un rï¿½pertoire, il faut utiliser l'objet DirectoryStream
+			  //L'objet Files permet de crï¿½er ce type d'objet afin de pouvoir l'utiliser
 			  try(DirectoryStream<Path> listing = Files.newDirectoryStream(roots)){
 			    int i = 0;
 			    for(Path nom : listing){
@@ -43,17 +43,17 @@ public class Transferable {
 		}
 	}
 	
-	//envoie les infos sur son répertoire à son processus interlocuteur
+	//envoie les infos sur son rï¿½pertoire ï¿½ son processus interlocuteur
 	public void infoRepo(PrintWriter pw) {						
 		try{
 			//Path chemin = Paths.get(repository);
 			
 			Path roots = FileSystems.getDefault().getPath(repository);
-			//Maintenant, il ne nous reste plus qu'à parcourir
+			//Maintenant, il ne nous reste plus qu'ï¿½ parcourir
 			
 			  pw.println(roots);
-			  //Pour lister un répertoire, il faut utiliser l'objet DirectoryStream
-			  //L'objet Files permet de créer ce type d'objet afin de pouvoir l'utiliser
+			  //Pour lister un rï¿½pertoire, il faut utiliser l'objet DirectoryStream
+			  //L'objet Files permet de crï¿½er ce type d'objet afin de pouvoir l'utiliser
 			  try(DirectoryStream<Path> listing = Files.newDirectoryStream(roots)){
 			    int i = 0;
 			    for(Path nom : listing){
@@ -65,7 +65,7 @@ public class Transferable {
 					    if(i%4 == 0)System.out.println("\n");
 			    	}
 			    }
-			    System.out.println("end");
+			    pw.println("end");
 			  } catch (IOException e) {
 				  e.printStackTrace();
 			  }
@@ -74,7 +74,7 @@ public class Transferable {
 		}
 	}
 	
-	//askRepo demande au processus avec lequel il discute les informations sur son répertoire
+	//askRepo demande au processus avec lequel il discute les informations sur son rï¿½pertoire
 	public void askRepo(PrintWriter pw, BufferedReader br) {		
 		pw.print("askRepo");
 		String line = "";
@@ -110,16 +110,21 @@ public class Transferable {
 	    }
 	
 	//attend des commandes de la part du processus avec qui il discute
-	public void listen(PrintWriter pw, BufferedReader br) {			
+	public void listen(PrintWriter pw, BufferedReader br) throws InterruptedException {
 		String cmd = null;
 		while(cmd != "STOP") {
 			try {
-				cmd = br.readLine();
-			
-				switch(cmd) {
-				case "askRepo" : {
-					infoRepo(pw);
-				}
+				System.out.println("coucou1");
+				if(br.ready()) {
+					cmd = br.readLine();
+								
+					System.out.println("coucou2");
+					switch(cmd) {
+						case "askRepo" : {
+							infoRepo(pw);
+							break;
+						}
+					}
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
