@@ -27,34 +27,56 @@ public class Maitre  extends Transferable implements Runnable{
 		File frec= new File("H:/Mes documents/4A/TestReseau/Serveur/Recu.odt");
 		Scanner sc=new Scanner(System.in);
 		
-		System.out.println("Voulez-vous :\n1 : Envoyer un fichier\n2 : Recuperer un fichier\n3 : \n4 : \n");
-		switch (sc.nextInt()) {
+		System.out.println("Voulez-vous :\n1 : Récupere un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasemen\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement");
+		int i=sc.nextInt();
+
+		switch (i) {
 		case 1:
 			bw.println("1");
 			bw.flush();
-			try {
+			/*try {
 				
 				
 				push(fenv);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
+			}*/
 			break;
 		case 2:
 			bw.println("2");
 			bw.flush();
-			try {
+			/*try {
 				
 				pull(frec);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			} 
+			} */
 			
 			break;		
+		case 3:
+			bw.println("3");
+			bw.flush();
+			break;
+			
+		case 4:
+			bw.println("4");
+			bw.flush();
+			break;	
+			
+		case 5:
+			bw.println("5");
+			bw.flush();
+			break;	
+			
+		case 6:
+			bw.println("6");
+			bw.flush();
+			break;	
 			
 		default:
+			System.out.println(i);
 			break;
 		}	
 		sc.close();	
