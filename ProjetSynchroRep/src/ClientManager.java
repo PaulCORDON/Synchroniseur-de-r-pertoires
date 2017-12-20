@@ -16,7 +16,7 @@ public class ClientManager extends Transferable implements Runnable {
 	Socket client;
 	ArrayList<utilisateur> comptes=new ArrayList<utilisateur>();
 	File frec= new File("H:/Mes documents/4A/TestReseau/Serveur/Recu.odt");
-	
+	File fenv= new File("H:/Mes documents/4A/TestReseau/Client/aEnvoyer.odt");
 
 	public ClientManager(Socket cl) {
 		client=cl;		
@@ -59,6 +59,7 @@ public class ClientManager extends Transferable implements Runnable {
 		}
 
 		/*On recupere le pseudo de l'utilisateur*/
+		int choix;
 		String lu=null;
 		String type="inconnu";
 		try{
@@ -78,8 +79,27 @@ public class ClientManager extends Transferable implements Runnable {
 			PrintWriter rep =new PrintWriter(new OutputStreamWriter(output));			
 			rep.println(type);
 			rep.flush();
-			System.out.println(type);	
-			pull(frec);
+			
+			choix=br.read()-48;
+			switch (choix) {
+			case 1:
+				pull(frec);
+				System.out.println("reception");
+				break;
+
+			case 2:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			default:
+				System.out.println(choix);
+				break;
+			}
+			
+			
+			
+			
+			
 			
 		}
 		catch(Exception e){
@@ -91,5 +111,8 @@ public class ClientManager extends Transferable implements Runnable {
 
 	private void pull(File f)throws IOException {        
 		transfert(client.getInputStream(),new FileOutputStream(f),true); 
+	}
+	private void push(File f)throws IOException {	  
+        transfert(new FileInputStream(f),client.getOutputStream(),true);
 	}
 }

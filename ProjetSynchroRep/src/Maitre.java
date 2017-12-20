@@ -3,10 +3,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Maitre  extends Transferable implements Runnable{
 	
@@ -25,20 +24,40 @@ public class Maitre  extends Transferable implements Runnable{
 	
 	public void run(){
 		File fenv= new File("H:/Mes documents/4A/TestReseau/Client/aEnvoyer.odt");
+		File frec= new File("H:/Mes documents/4A/TestReseau/Serveur/Recu.odt");
+		Scanner sc=new Scanner(System.in);
 		
-		
-		try {
-			push(fenv);
+		System.out.println("Voulez-vous :\n1 : Envoyer un fichier\n2 : Recuperer un fichier\n3 : \n4 : \n");
+		switch (sc.nextInt()) {
+		case 1:
+			bw.println("1");
+			bw.flush();
+			try {
+				
+				
+				push(fenv);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			break;
+		case 2:
+			bw.println("2");
+			bw.flush();
+			try {
+				
+				pull(frec);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-		
-		
+			break;		
+			
+		default:
+			break;
+		}	
+		sc.close();	
 	}
 	
 	

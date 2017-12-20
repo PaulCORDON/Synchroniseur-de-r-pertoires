@@ -7,12 +7,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.*;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Client {
@@ -20,9 +14,6 @@ public class Client {
 	private String id;
 	private static int    _port;
 	private static Socket _socket;
-	private String repository = "H:/Mes documents/4A";
-	
-	
 	Client(String st){
 		id=st;
 	}
