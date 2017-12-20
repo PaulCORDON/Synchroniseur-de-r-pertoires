@@ -24,9 +24,9 @@ public class Serveur{
 				// Accept new TCP client
 				Socket client       = _socket.accept();
 				ClientManager th= new ClientManager(client);
-				
+				Thread thread = new Thread(th);
 				System.out.println("New client, address " + client.getInetAddress() + " on " + client.getPort() + ".");
-				th.run();
+				thread.start();
 			}
 		}
 		catch (IOException e)
