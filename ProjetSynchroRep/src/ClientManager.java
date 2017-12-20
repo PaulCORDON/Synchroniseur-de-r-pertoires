@@ -19,8 +19,7 @@ public class ClientManager extends Transferable implements Runnable {
 	
 
 	public ClientManager(Socket cl) {
-		client=cl;	
-		repository="H:/";	
+		client=cl;		
 	}
 	
 	public void run(){
