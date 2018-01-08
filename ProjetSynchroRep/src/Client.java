@@ -46,16 +46,18 @@ public class Client {
 			
 			bw.println(cl.id);
 			bw.flush();
-			Thread.sleep(1000);
+			Thread.sleep(500);
 			lu=br.readLine();
 			System.out.println(lu);
 			if(lu.equals("maitre")) {
 				Maitre maitre=new Maitre(cl.id,br,bw,_socket);
-				maitre.run();
+				Thread thread = new Thread(maitre);
+				thread.start();
 			}
 			else if(lu.equals("esclave")) {
 				Esclave esclave=new Esclave(cl.id,br,bw,_socket);
-				esclave.run();
+				Thread thread = new Thread(esclave);
+				thread.start();
 			}
 			else{
 				System.out.println("Vous n'etes pas client");
