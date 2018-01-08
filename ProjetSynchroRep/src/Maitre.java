@@ -23,6 +23,7 @@ public class Maitre  extends Transferable implements Runnable{
 	}
 	
 	public void run(){
+		repository = "H:\\Mes documents\\4A\\TestReseau\\Client";
 		File fenv= new File("H:/Mes documents/4A/TestReseau/Client/aEnvoyer.odt");
 		File frec= new File("H:/Mes documents/4A/TestReseau/Serveur/Recu.odt");
 		Scanner sc=new Scanner(System.in);
@@ -81,7 +82,7 @@ public class Maitre  extends Transferable implements Runnable{
 			break;
 			
 		case 8 :
-			
+			setRepo();
 			break;
 			
 		case 9 :

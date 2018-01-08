@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,6 +8,11 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 
 public class Transferable {
@@ -153,8 +159,16 @@ public class Transferable {
 	}
 	
 	public boolean setRepo() {
-		String repo = null;
-		repository = repo;
-		return true;
+		System.out.println("Sélection du répertoire");
+        JFileChooser jfc = new JFileChooser();
+        System.out.print("TEST PASSAGE");
+        jfc.setCurrentDirectory(new File(repository));
+        int result = jfc.showOpenDialog(new JFrame());
+        if(result == JFileChooser.APPROVE_OPTION) {
+        	File selectedFile = jfc.getSelectedFile();
+        	repository = selectedFile.getAbsolutePath(); 
+        	return true;
+        }
+		return false;
 	}
 }

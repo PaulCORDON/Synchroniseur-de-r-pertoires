@@ -16,6 +16,7 @@ public class Esclave extends Transferable implements Runnable{
 		_socket=s;
 	}
 	public void run(){
+		repository = "H:\\Mes documents\\4A\\TestReseau\\Client";
 		Scanner sc= new Scanner(System.in);		
 		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement");
 		switch (sc.nextInt()) {
