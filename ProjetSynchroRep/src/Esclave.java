@@ -17,7 +17,7 @@ public class Esclave extends Transferable implements Runnable{
 	}
 	public void run(){
 		Scanner sc= new Scanner(System.in);		
-		System.out.println("Voulez-vous :\n1 : Récupere un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasemen");
+		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement");
 		switch (sc.nextInt()) {
 		case 1:
 			bw.println("1");
@@ -51,6 +51,11 @@ public class Esclave extends Transferable implements Runnable{
 			break;
 		}	
 		sc.close();
-
+		try {
+			_socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

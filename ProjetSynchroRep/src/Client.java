@@ -72,20 +72,7 @@ public class Client {
 		{
 			e.printStackTrace();
 		}
-		finally
-		{
-			try
-			{
-				sc.close();
-				input.close();
-				_socket.close();
-				System.out.println("Déconection du serveur");
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
+
 	}
 	
 	

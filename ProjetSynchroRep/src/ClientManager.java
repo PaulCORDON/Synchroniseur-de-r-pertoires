@@ -80,7 +80,9 @@ public class ClientManager extends Transferable implements Runnable {
 			rep.println(type);
 			rep.flush();
 			
-			choix=br.read();
+			
+			choix=br.read()-48;
+				
 			switch (choix) {
 			case 1:
 				pull(frec);
@@ -92,7 +94,7 @@ public class ClientManager extends Transferable implements Runnable {
 				System.out.println("envois");
 				break;
 			default:
-				System.out.println(choix);
+				System.out.println("choix client : " + choix);
 				break;
 			}
 			
