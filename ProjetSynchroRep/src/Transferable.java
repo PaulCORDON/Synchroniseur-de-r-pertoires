@@ -8,6 +8,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -88,25 +89,6 @@ public class Transferable {
 		}
 	}
 	
-	//askRepo demande au processus avec lequel il discute les informations sur son repertoire
-	public String askRepo(PrintWriter pw, BufferedReader br) {		
-		pw.print("askRepo");
-		String total = null;
-		String line = "";
-		while(line != "end") {
-			try {
-				line = br.readLine();
-				total += line; 
-				System.out.println(line);
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return total;
-	}
-	
 	public void push(OutputStream os) {
 		//transfert(new FileInputStream(repository))
 	}
@@ -126,49 +108,23 @@ public class Transferable {
 	        }
 	    }
 	
-	//attend des commandes de la part du processus avec qui il discute
-	public void listen(PrintWriter pw, BufferedReader br) throws InterruptedException {
-		String cmd = null;
-		while(cmd != "STOP") {
-			try {
-				System.out.println("coucou1");
-				if(br.ready()) {
-					cmd = br.readLine();
-								
-					System.out.println("coucou2");
-					switch(cmd) {
-						case "askRepo" : {
-							infoRepo(pw);
-							break;
-						}
-					}
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public boolean send(PrintWriter pw, BufferedReader br, int Mode) {		//permet de mettre à jour le dossier de l'interracteur (l'autre processus avec lequel celui ci discute)
 		String selfInfo, otherInfo;
 		selfInfo = infoRepo();
-		otherInfo = askRepo(pw,br);
+		otherInfo = null;
 		
 		return true;
 	}
 	
-	public boolean setRepo() {
+	public boolean setRepo(Scanner sc) {
 		System.out.println("Sélection du répertoire");
-        JFileChooser jfc = new JFileChooser();
-        System.out.print("TEST PASSAGE");
-        jfc.setCurrentDirectory(new File(repository));
-        int result = jfc.showOpenDialog(new JFrame());
-        if(result == JFileChooser.APPROVE_OPTION) {
-        	File selectedFile = jfc.getSelectedFile();
-        	repository = selectedFile.getAbsolutePath(); 
+        try {
+        	repository = sc.next();
+        	FileSystems.getDefault().getPath(repository);
         	return true;
+        }catch(Exception e){
+        	e.printStackTrace();
+        	return false;
         }
-		return false;
 	}
 }

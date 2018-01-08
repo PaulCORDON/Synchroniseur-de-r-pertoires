@@ -82,11 +82,11 @@ public class Maitre  extends Transferable implements Runnable{
 			break;
 			
 		case 8 :
-			setRepo();
+			setRepo(sc);
 			break;
 			
 		case 9 :
-			askRepo(bw,br);
+			
 			break;
 			
 		default:
