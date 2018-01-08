@@ -27,7 +27,7 @@ public class Maitre  extends Transferable implements Runnable{
 		File frec= new File("H:/Mes documents/4A/TestReseau/Serveur/Recu.odt");
 		Scanner sc=new Scanner(System.in);
 		
-		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement");
+		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement\n7 : Afficher des informations sur le répertoire sélectionné\n8 : Sélectionner le répertoire\n9 : Afficher les informations de l'autre répertoire");
 
 		int i=sc.nextInt();
 
@@ -75,6 +75,18 @@ public class Maitre  extends Transferable implements Runnable{
 			bw.println("6");
 			bw.flush();
 			break;	
+			
+		case 7 :
+			infoRepo();
+			break;
+			
+		case 8 :
+			
+			break;
+			
+		case 9 :
+			askRepo(bw,br);
+			break;
 			
 		default:
 			System.out.println(i);

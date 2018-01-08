@@ -13,23 +13,25 @@ public class Transferable {
 	
 	protected String repository;
 	
-	//affiche les infos sur son rï¿½pertoire
-	public void infoRepo(){
+	//affiche les infos sur son repertoire
+	public String infoRepo(){
+		String line= null;
+		String retour = null;
 		try{
 			//Path chemin = Paths.get(repository);
 			
 			Path roots = FileSystems.getDefault().getPath(repository);
-			//Maintenant, il ne nous reste plus qu'ï¿½ parcourir
+			//Maintenant, il ne nous reste plus qu'a parcourir
 			
 			  System.out.println(roots);
-			  //Pour lister un rï¿½pertoire, il faut utiliser l'objet DirectoryStream
-			  //L'objet Files permet de crï¿½er ce type d'objet afin de pouvoir l'utiliser
+			  //Pour lister un repertoire, il faut utiliser l'objet DirectoryStream
+			  //L'objet Files permet de creer ce type d'objet afin de pouvoir l'utiliser
 			  try(DirectoryStream<Path> listing = Files.newDirectoryStream(roots)){
 			    int i = 0;
 			    for(Path nom : listing){
 			    	if(Files.size(nom)>0){
-					    System.out.print("\t\t" + ((Files.isDirectory(nom)) ? nom+"/" : nom));
-					    System.out.println(" ["+Files.size(nom)+" octets]");
+			    		line = "\t\t" + (Files.isDirectory(nom)) != null ? nom+"/" : nom + " ["+Files.size(nom)+" octets] ,last modification : "+Files.getLastModifiedTime(nom)+"\n";
+			    		retour += line;
 					    System.out.print(" ,last modification : "+Files.getLastModifiedTime(nom)+"\n");
 					    i++;
 					    if(i%4 == 0)System.out.println("\n");
@@ -40,27 +42,31 @@ public class Transferable {
 			  }
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally {
+			return retour;
 		}
 	}
 	
-	//envoie les infos sur son rï¿½pertoire ï¿½ son processus interlocuteur
-	public void infoRepo(PrintWriter pw) {						
+	//envoie les infos sur son repertoire a son processus interlocuteur
+	public String infoRepo(PrintWriter pw) {
+		String retour = null;
+		String line=null;
 		try{
 			//Path chemin = Paths.get(repository);
 			
 			Path roots = FileSystems.getDefault().getPath(repository);
-			//Maintenant, il ne nous reste plus qu'ï¿½ parcourir
+			//Maintenant, il ne nous reste plus qu'a parcourir
 			
 			  pw.println(roots);
-			  //Pour lister un rï¿½pertoire, il faut utiliser l'objet DirectoryStream
-			  //L'objet Files permet de crï¿½er ce type d'objet afin de pouvoir l'utiliser
+			  //Pour lister un repertoire, il faut utiliser l'objet DirectoryStream
+			  //L'objet Files permet de creer ce type d'objet afin de pouvoir l'utiliser
 			  try(DirectoryStream<Path> listing = Files.newDirectoryStream(roots)){
 			    int i = 0;
 			    for(Path nom : listing){
 			    	if(Files.size(nom)>0){
-					    pw.print("\t\t" + ((Files.isDirectory(nom)) ? nom+"/" : nom));
-					    pw.println(" ["+Files.size(nom)+" octets]");
-					    pw.print(" ,last modification : "+Files.getLastModifiedTime(nom)+"\n");
+			    		line = "\t\t" + (Files.isDirectory(nom)) != null ? nom+"/" : nom + " ["+Files.size(nom)+" octets] ,last modification : "+Files.getLastModifiedTime(nom)+"\n";
+			    		retour += line;
+					    pw.print(line);
 					    i++;
 					    if(i%4 == 0)System.out.println("\n");
 			    	}
@@ -71,16 +77,20 @@ public class Transferable {
 			  }
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally {
+			return retour;
 		}
 	}
 	
-	//askRepo demande au processus avec lequel il discute les informations sur son rï¿½pertoire
-	public void askRepo(PrintWriter pw, BufferedReader br) {		
+	//askRepo demande au processus avec lequel il discute les informations sur son repertoire
+	public String askRepo(PrintWriter pw, BufferedReader br) {		
 		pw.print("askRepo");
+		String total = null;
 		String line = "";
 		while(line != "end") {
 			try {
 				line = br.readLine();
+				total += line; 
 				System.out.println(line);
 
 			} catch (IOException e) {
@@ -88,6 +98,7 @@ public class Transferable {
 				e.printStackTrace();
 			}
 		}
+		return total;
 	}
 	
 	public void push(OutputStream os) {
@@ -131,5 +142,19 @@ public class Transferable {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public boolean send(PrintWriter pw, BufferedReader br, int Mode) {		//permet de mettre à jour le dossier de l'interracteur (l'autre processus avec lequel celui ci discute)
+		String selfInfo, otherInfo;
+		selfInfo = infoRepo();
+		otherInfo = askRepo(pw,br);
+		
+		return true;
+	}
+	
+	public boolean setRepo() {
+		String repo = null;
+		repository = repo;
+		return true;
 	}
 }
