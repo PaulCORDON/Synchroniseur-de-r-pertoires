@@ -78,15 +78,24 @@ public class Maitre  extends Transferable implements Runnable{
 			break;	
 			
 		case 7 :
+			bw.println(i);
 			infoRepo();
 			break;
 			
 		case 8 :
+			bw.println(i);
 			setRepo(sc);
+			System.out.println(repository);
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 			
 		case 9 :
-			
+			bw.println(i);
 			break;
 			
 		default:

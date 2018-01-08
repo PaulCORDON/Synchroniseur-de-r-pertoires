@@ -119,7 +119,7 @@ public class Transferable {
 	public boolean setRepo(Scanner sc) {
 		System.out.println("Sélection du répertoire");
         try {
-        	repository = sc.next();
+        	repository = sc.nextLine()+sc.nextLine();
         	FileSystems.getDefault().getPath(repository);
         	return true;
         }catch(Exception e){
