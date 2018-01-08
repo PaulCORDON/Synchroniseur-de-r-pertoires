@@ -31,11 +31,11 @@ public class Maitre  extends Transferable implements Runnable{
 		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement\n7 : Afficher des informations sur le répertoire sélectionné\n8 : Sélectionner le répertoire\n9 : Afficher les informations de l'autre répertoire");
 
 		int i=sc.nextInt();
-
+		bw.print(i);
+		bw.flush();
 		switch (i) {
 		case 1:
-			bw.print(i);
-			bw.flush();
+			
 			/*try {
 				
 				
@@ -46,8 +46,7 @@ public class Maitre  extends Transferable implements Runnable{
 			}*/
 			break;
 		case 2:
-			bw.println(i);
-			bw.flush();
+
 			/*try {
 				
 				pull(frec);
@@ -58,32 +57,26 @@ public class Maitre  extends Transferable implements Runnable{
 			
 			break;		
 		case 3:
-			bw.println("3");
-			bw.flush();
+
 			break;
 			
 		case 4:
-			bw.println("4");
-			bw.flush();
+
 			break;	
 			
 		case 5:
-			bw.println("5");
-			bw.flush();
+
 			break;	
 			
 		case 6:
-			bw.println("6");
-			bw.flush();
+
 			break;	
 			
 		case 7 :
-			bw.println(i);
 			infoRepo();
 			break;
 			
 		case 8 :
-			bw.println(i);
 			setRepo(sc);
 			System.out.println(repository);
 			try {
@@ -95,7 +88,6 @@ public class Maitre  extends Transferable implements Runnable{
 			break;
 			
 		case 9 :
-			bw.println(i);
 			break;
 			
 		default:
