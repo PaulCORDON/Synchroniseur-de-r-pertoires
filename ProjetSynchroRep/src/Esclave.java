@@ -19,9 +19,12 @@ public class Esclave extends Transferable implements Runnable{
 		repository = "H:\\Mes documents\\4A\\TestReseau\\Client";
 		Scanner sc= new Scanner(System.in);		
 		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement");
-		switch (sc.nextInt()) {
+		
+		int i=sc.nextInt();
+		
+		switch (i) {
 		case 1:
-			bw.println("1");
+			bw.print(i);
 			bw.flush();
 			/*try {
 				
@@ -33,8 +36,9 @@ public class Esclave extends Transferable implements Runnable{
 			}*/
 			break;
 		case 2:
-			bw.println("2");
+			bw.print(i);
 			bw.flush();
+
 			/*try {
 				
 				pull(frec);
@@ -45,8 +49,9 @@ public class Esclave extends Transferable implements Runnable{
 			*/
 			break;		
 		case 3:
-			bw.println("3");
+			bw.print(i);
 			bw.flush();
+
 			break;	
 		default:
 			break;

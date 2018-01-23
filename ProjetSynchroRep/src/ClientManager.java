@@ -93,6 +93,35 @@ public class ClientManager extends Transferable implements Runnable {
 				push(fenv);
 				System.out.println("envois");
 				break;
+			case 3:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			case 4:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			case 5:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			case 6:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			case 7:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			case 8:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			case 9:
+				push(fenv);
+				System.out.println("envois");
+				break;
+			
 			default:
 				System.out.println("choix client : " + choix);
 				break;
