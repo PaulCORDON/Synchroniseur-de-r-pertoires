@@ -28,13 +28,13 @@ public class Maitre  extends Transferable implements Runnable{
 		f.mkdirs();
 		Scanner sc=new Scanner(System.in);
 		
-		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement\n7 : Afficher des informations sur le répertoire sélectionné\n8 : Sélectionner le répertoire\n9 : Afficher les informations de l'autre répertoire");
+		System.out.println("Voulez-vous :\n1 : Rï¿½cuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement\n7 : Afficher des informations sur le rï¿½pertoire sï¿½lectionnï¿½\n8 : Sï¿½lectionner le rï¿½pertoire\n9 : Afficher les informations de l'autre rï¿½pertoire");
 
 		int i=sc.nextInt();
 		bw.print(i);
 		bw.flush();
 		switch (i) {
-		case 1:
+		case 1: 	// Rï¿½cuperer un fichier en mode supression
 			
 			/*try {
 				
@@ -45,7 +45,7 @@ public class Maitre  extends Transferable implements Runnable{
 				e1.printStackTrace();
 			}*/
 			break;
-		case 2:
+		case 2:		//Recuperer un fichier en mode watchdog
 
 			/*try {
 				
@@ -56,7 +56,7 @@ public class Maitre  extends Transferable implements Runnable{
 			} 
 			*/
 			break;		
-		case 3:
+		case 3:		//Recuperer un fichier en mode ecrasement
 
 			break;
 			
@@ -87,11 +87,11 @@ public class Maitre  extends Transferable implements Runnable{
 			}
 			break;	
 			
-		case 7 :
+		case 7 :	//Afficher des informations sur le rï¿½pertoire sï¿½lectionnï¿½
 			infoRepo();
 			break;
 			
-		case 8 :
+		case 8 :	//Sï¿½lectionner le rï¿½pertoire
 			setRepo(sc);
 			System.out.println(repository);
 			try {
@@ -102,7 +102,8 @@ public class Maitre  extends Transferable implements Runnable{
 			}
 			break;
 			
-		case 9 :
+		case 9 :	//Afficher les informations de l'autre rï¿½pertoire
+			
 			break;
 			
 		default:
