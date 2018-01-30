@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 public class ClientManager extends Transferable implements Runnable {
 	Socket client;
 	ArrayList<utilisateur> comptes=new ArrayList<utilisateur>();
-	File f= new File("H:/Mes documents/4A/TestReseau/Serveur");
+
 	String message;	
 	String nom;
 	String type;
@@ -27,6 +27,7 @@ public class ClientManager extends Transferable implements Runnable {
 	}
 	
 	public void run(){
+		File repert= new File("H:/Mes documents/4A/TestReseau/Serveur");
 		
 		/*On remplit la liste de compte utilisateur*/
 		try {
@@ -89,22 +90,22 @@ public class ClientManager extends Transferable implements Runnable {
 				
 			switch (choix) {
 			case 1:
-				pull(f);
+				pull(repert);
 				System.out.println("reception");
 				break;
 
 			case 2:
-				push(f);
+				push(repert);
 				System.out.println("envois");
 				break;
 			case 3:
-				push(f);
+				push(repert);
 				System.out.println("envois");
 				break;
 			case 4:
-				viderDossier(f);
+				viderDossier(repert);
 				
-				f.mkdirs();
+				repert.mkdirs();
 				
 				boolean enCour = true;
 				do
@@ -123,14 +124,14 @@ public class ClientManager extends Transferable implements Runnable {
 						
 						if(type.equals("dir"))
 						{
-							f = new File(nom);
+							File f = new File(nom);
 							f.mkdir();
 						}
 						else
 						{
-							f = new File(nom);
+							File f = new File(nom);
 							f.createNewFile();
-							if(f.lastModified()==lm)
+							if(f.lastModified()!=lm)
 							{
 								System.out.println("OK");
 								rep.println("OK");
@@ -141,7 +142,7 @@ public class ClientManager extends Transferable implements Runnable {
 								System.out.println("PASOK");
 								rep.println("PASOK");
 								rep.flush();
-								/*pull(f);*/
+								pull(f);
 								
 								f.setLastModified(lm);
 							}
@@ -153,23 +154,23 @@ public class ClientManager extends Transferable implements Runnable {
 				
 				break;
 			case 5:
-				push(f);
+				push(repert);
 				System.out.println("envois");
 				break;
 			case 6:
-				push(f);
+				push(repert);
 				System.out.println("envois");
 				break;
 			case 7:
-				push(f);
+				push(repert);
 				System.out.println("envois");
 				break;
 			case 8:
-				push(f);
+				push(repert);
 				System.out.println("envois");
 				break;
 			case 9:
-				push(f);
+				push(repert);
 				System.out.println("envois");
 				break;
 			
