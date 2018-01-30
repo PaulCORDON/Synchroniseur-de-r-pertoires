@@ -15,8 +15,12 @@ import org.xml.sax.SAXException;
 public class ClientManager extends Transferable implements Runnable {
 	Socket client;
 	ArrayList<utilisateur> comptes=new ArrayList<utilisateur>();
-	File frec= new File("H:/Mes documents/4A/TestReseau/Serveur/Recu.odt");
-	File fenv= new File("H:/Mes documents/4A/TestReseau/Client/aEnvoyer.odt");
+	File f= new File("H:/Mes documents/4A/TestReseau/Serveur");
+	String message;	
+	String nom;
+	String type;
+	String derniereModif;
+	Long lm;
 
 	public ClientManager(Socket cl) {
 		client=cl;		
@@ -85,40 +89,87 @@ public class ClientManager extends Transferable implements Runnable {
 				
 			switch (choix) {
 			case 1:
-				pull(frec);
+				pull(f);
 				System.out.println("reception");
 				break;
 
 			case 2:
-				push(fenv);
+				push(f);
 				System.out.println("envois");
 				break;
 			case 3:
-				push(fenv);
+				push(f);
 				System.out.println("envois");
 				break;
 			case 4:
-				push(fenv);
-				System.out.println("envois");
+				viderDossier(f);
+				
+				f.mkdirs();
+				
+				boolean enCour = true;
+				do
+				{
+					System.out.println("la");
+					message=br.readLine();
+					System.out.println(message);
+					if(message!=null && message.equals("finRacine1"))
+						enCour = false;
+					else if (message!=null && !message.equals("null"))
+					{	
+						nom=message.split("  ")[0];
+						type=message.split("  ")[1];
+						derniereModif = message.split("  ")[2];
+						lm=Long.valueOf(derniereModif);
+						
+						if(type.equals("dir"))
+						{
+							f = new File(nom);
+							f.mkdir();
+						}
+						else
+						{
+							f = new File(nom);
+							f.createNewFile();
+							if(f.lastModified()==lm)
+							{
+								System.out.println("OK");
+								rep.println("OK");
+								rep.flush();
+							}
+							else
+							{
+								System.out.println("PASOK");
+								rep.println("PASOK");
+								rep.flush();
+								/*pull(f);*/
+								
+								f.setLastModified(lm);
+							}
+						}
+					}
+					System.out.println(enCour);
+					
+				}while(enCour);
+				
 				break;
 			case 5:
-				push(fenv);
+				push(f);
 				System.out.println("envois");
 				break;
 			case 6:
-				push(fenv);
+				push(f);
 				System.out.println("envois");
 				break;
 			case 7:
-				push(fenv);
+				push(f);
 				System.out.println("envois");
 				break;
 			case 8:
-				push(fenv);
+				push(f);
 				System.out.println("envois");
 				break;
 			case 9:
-				push(fenv);
+				push(f);
 				System.out.println("envois");
 				break;
 			
@@ -139,6 +190,15 @@ public class ClientManager extends Transferable implements Runnable {
 		
 	}
 
+
+	private void viderDossier(File f2) {
+		for (File f: f2.listFiles())
+		{
+			if(f.isDirectory()) viderDossier(f);
+			f.delete();
+		}
+		
+	}
 
 	private void pull(File f)throws IOException {        
 		transfert(client.getInputStream(),new FileOutputStream(f),true); 

@@ -23,12 +23,16 @@ public class Maitre  extends Transferable implements Runnable{
 		_socket=s;
 	}
 	
+	private void push(File f)throws IOException {	  
+        transfert(new FileInputStream(f),_socket.getOutputStream(),true);
+	}
+	
 	public void run(){
-		File f= new File("H:\\Mes documents\\4A\\TestReseau\\Maitre");
+		File f= new File("H:/Mes documents/4A/TestReseau/Maitre");
 		f.mkdirs();
 		Scanner sc=new Scanner(System.in);
 		
-		System.out.println("Voulez-vous :\n1 : Rï¿½cuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement\n7 : Afficher des informations sur le rï¿½pertoire sï¿½lectionnï¿½\n8 : Sï¿½lectionner le rï¿½pertoire\n9 : Afficher les informations de l'autre rï¿½pertoire");
+		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement\n7 : Afficher des informations sur le répertoire sélectionné\n8 : Sélectionner le répertoire\n9 : Afficher les informations de l'autre répertoire");
 
 		int i=sc.nextInt();
 		bw.print(i);
@@ -120,7 +124,9 @@ public class Maitre  extends Transferable implements Runnable{
 	}
 	
 	
-	public static void envoi(File f, PrintWriter out, BufferedReader in) throws IOException 
+	
+	
+	public void envoi(File f, PrintWriter out, BufferedReader in) throws IOException 
 	{
 		int nbBouclesRecursives = compteur++;
 		
@@ -151,14 +157,7 @@ public class Maitre  extends Transferable implements Runnable{
 					
 					if(rep.equals("PASOK"))
 					{	
-						while((rep=br.readLine())!=null) 
-						{
-							out.println(rep);
-							out.flush();
-						}
-				
-						out.println("null");
-						out.flush();
+						push(f);
 					}
 					br.close();
 				}			
@@ -181,9 +180,7 @@ public class Maitre  extends Transferable implements Runnable{
 		}
 }
  
-	private void push(File f)throws IOException {	  
-        transfert(new FileInputStream(f),_socket.getOutputStream(),true);
-	}
+
 
 	private void pull(File f)throws IOException {        
         transfert(_socket.getInputStream(),new FileOutputStream(f),true); 
