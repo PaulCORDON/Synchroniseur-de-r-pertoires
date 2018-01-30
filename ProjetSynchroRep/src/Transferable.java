@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,9 +38,9 @@ public class Transferable {
 			    int i = 0;
 			    for(Path nom : listing){
 			    	if(Files.size(nom)>0){
-			    		line = "\t\t" + (Files.isDirectory(nom)) != null ? nom+"/" : nom + " ["+Files.size(nom)+" octets] ,last modification : "+Files.getLastModifiedTime(nom)+"\n";
+			    		line = "\t\t" + nom+ "/" + " ["+Files.size(nom)+" octets] ,last modification : "+Files.getLastModifiedTime(nom)+"\n";
 			    		retour += line;
-					    System.out.print(" ,last modification : "+Files.getLastModifiedTime(nom)+"\n");
+					    System.out.print(line);
 					    i++;
 					    if(i%4 == 0)System.out.println("\n");
 			    	}
@@ -55,7 +56,7 @@ public class Transferable {
 	}
 	
 	//envoie les infos sur son repertoire a son processus interlocuteur
-	public String infoRepo(PrintWriter pw) {
+	/*public String infoRepo(PrintWriter pw) {
 		String retour = null;
 		String line=null;
 		try{
@@ -71,7 +72,7 @@ public class Transferable {
 			    int i = 0;
 			    for(Path nom : listing){
 			    	if(Files.size(nom)>0){
-			    		line = "\t\t" + (Files.isDirectory(nom)) != null ? nom+"/" : nom + " ["+Files.size(nom)+" octets] ,last modification : "+Files.getLastModifiedTime(nom)+"\n";
+			    		line = "\t\t" + (Files.isDirectory(nom)) != null ? nom+"/" : nom + " "+Files.size(nom)+"octets "+Files.getLastModifiedTime(nom)+"\n";
 			    		retour += line;
 					    pw.print(line);
 					    i++;
@@ -86,6 +87,33 @@ public class Transferable {
 			e.printStackTrace();
 		}finally {
 			return retour;
+		}
+	}*/
+	
+	public void envoi(int mode, String file, PrintWriter out, BufferedReader in) {
+		String message;
+		File f = new File(file);
+		for(File subFile : f.listFiles()) {
+				if(subFile.isDirectory()) {
+					out.println(subFile.getAbsolutePath() + "  dir  " + subFile.lastModified());
+					out.flush();
+					envoi(mode, subFile.getAbsolutePath(), out, in);
+				}else {
+					out.println(subFile.getAbsolutePath() + "  file  " + subFile.lastModified());
+					out.flush();
+					
+					try {
+						message = in.readLine();
+						if(message.equals("PASOK")) {
+							BufferedReader br = new BufferedReader(new FileReader(subFile));
+							//transfert(in,out, true);
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					
+				}
 		}
 	}
 	
@@ -112,7 +140,14 @@ public class Transferable {
 		String selfInfo, otherInfo;
 		selfInfo = infoRepo();
 		otherInfo = null;
-		
+		if(selfInfo.equals(otherInfo)) {
+			return true;
+		}else {
+			boolean finish = false;
+			while(finish = false) {
+				
+			}
+		}
 		return true;
 	}
 	
