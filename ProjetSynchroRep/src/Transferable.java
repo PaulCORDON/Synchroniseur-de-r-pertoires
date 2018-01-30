@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -20,6 +23,13 @@ import javax.swing.UIManager;
 public class Transferable {
 	
 	protected String repository;
+	Socket _socket;
+	protected void pull(File f)throws IOException {        
+		transfert(_socket.getInputStream(),new FileOutputStream(f),true); 
+	}
+	protected void push(File f)throws IOException {	  
+        transfert(new FileInputStream(f),_socket.getOutputStream(),true);
+	}
 	
 	//affiche les infos sur son repertoire
 	public String infoRepo(){
@@ -124,7 +134,7 @@ public class Transferable {
 	 public void transfert(InputStream in, OutputStream out, boolean closeOnExit) throws IOException
 	    {
 	        byte buf[] = new byte[1024];
-	        
+	        System.out.println("buffer :" +buf[1]);
 	        int n;
 	        while((n=in.read(buf))!=-1)
 	            out.write(buf,0,n);

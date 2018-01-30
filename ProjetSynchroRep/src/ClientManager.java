@@ -13,21 +13,20 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class ClientManager extends Transferable implements Runnable {
-	Socket client;
 	ArrayList<utilisateur> comptes=new ArrayList<utilisateur>();
 
-	String message;	
+	String message = "";	
 	String nom;
 	String type;
 	String derniereModif;
 	Long lm;
 
 	public ClientManager(Socket cl) {
-		client=cl;		
+		_socket=cl;		
 	}
 	
 	public void run(){
-		File repert= new File("H:/Mes documents/4A/TestReseau/Serveur");
+		File repert= new File("H:/Mes documents/4A/TestReseau/Maitre");
 		
 		/*On remplit la liste de compte utilisateur*/
 		try {
@@ -70,7 +69,7 @@ public class ClientManager extends Transferable implements Runnable {
 		try{
 			
 			/*On recupere le pseudo de l'utilisateur*/
-			InputStream input=client.getInputStream();
+			InputStream input=_socket.getInputStream();
 			BufferedReader br=new BufferedReader(new InputStreamReader(input));
 			lu=br.readLine();
 			System.out.println(lu);
@@ -80,7 +79,7 @@ public class ClientManager extends Transferable implements Runnable {
 				}
 			}
 			/*On lui retourne maitre esclave ou inconnue*/
-			OutputStream output = client.getOutputStream();	
+			OutputStream output = _socket.getOutputStream();	
 			PrintWriter rep =new PrintWriter(new OutputStreamWriter(output));			
 			rep.println(type);
 			rep.flush();
@@ -111,13 +110,13 @@ public class ClientManager extends Transferable implements Runnable {
 				do
 				{
 					System.out.println("la");
-					
+					message = br.readLine();
 					
 					if(message.equals("finRacine1"))
 						enCour = false;
 					
 					else if (!message.equals("null"))
-					{	
+					{
 						nom=message.split("  ")[0];
 						type=message.split("  ")[1];
 						derniereModif = message.split("  ")[2];
@@ -203,14 +202,8 @@ public class ClientManager extends Transferable implements Runnable {
 		{
 			if(f.isDirectory()) viderDossier(f);
 			f.delete();
-		}
-		
+		}	
 	}
 
-	private void pull(File f)throws IOException {        
-		transfert(client.getInputStream(),new FileOutputStream(f),true); 
-	}
-	private void push(File f)throws IOException {	  
-        transfert(new FileInputStream(f),client.getOutputStream(),true);
-	}
+	
 }

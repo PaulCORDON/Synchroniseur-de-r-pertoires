@@ -13,7 +13,6 @@ public class Maitre  extends Transferable implements Runnable{
 	String id;
 	BufferedReader br;
 	PrintWriter bw;
-	Socket _socket;
 	
 	
 	Maitre(String st,BufferedReader r,PrintWriter w,Socket s) {		
@@ -23,16 +22,21 @@ public class Maitre  extends Transferable implements Runnable{
 		_socket=s;
 	}
 	
-	private void push(File f)throws IOException {	  
-        transfert(new FileInputStream(f),_socket.getOutputStream(),true);
-	}
-	
 	public void run(){
 		File f= new File("H:/Mes documents/4A/TestReseau/Maitre");
 		f.mkdirs();
 		Scanner sc=new Scanner(System.in);
 		
-		System.out.println("Voulez-vous :\n1 : Récuperer un fichier en mode supression \n2 : Recuperer un fichier en mode watchdog\n3 : Recuperer un fichier en mode ecrasement\n4 : Envoyer un fichier en mode supression\n5 : Envoyer un fichier en mode watchdog\n6 : Envoyer un fichier en mode ecrasement\n7 : Afficher des informations sur le répertoire sélectionné\n8 : Sélectionner le répertoire\n9 : Afficher les informations de l'autre répertoire");
+		System.out.println("Voulez-vous :"
+				+ "\n1 : Récuperer un fichier en mode supression "
+				+ "\n2 : Recuperer un fichier en mode watchdog"
+				+ "\n3 : Recuperer un fichier en mode ecrasement"
+				+ "\n4 : Envoyer un fichier en mode supression"
+				+ "\n5 : Envoyer un fichier en mode watchdog"
+				+ "\n6 : Envoyer un fichier en mode ecrasement"
+				+ "\n7 : Afficher des informations sur le répertoire sélectionné"
+				+ "\n8 : Sélectionner le répertoire"
+				+ "\n9 : Afficher les informations de l'autre répertoire");
 
 		int i=sc.nextInt();
 		bw.print(i);
@@ -93,6 +97,13 @@ public class Maitre  extends Transferable implements Runnable{
 			
 		case 7 :	//Afficher des informations sur le rï¿½pertoire sï¿½lectionnï¿½
 			infoRepo();
+			System.out.println("coucou");
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			break;
 			
 		case 8 :	//Sï¿½lectionner le rï¿½pertoire
@@ -154,7 +165,7 @@ public class Maitre  extends Transferable implements Runnable{
 					out.flush();
 					
 					rep = in.readLine();
-					
+					System.out.println(rep);
 					if(rep.equals("PASOK"))
 					{	
 						push(f);
@@ -164,13 +175,7 @@ public class Maitre  extends Transferable implements Runnable{
 			}
 		}
 		System.out.println("fin de l'envoi " + nbBouclesRecursives);
-		if(nbBouclesRecursives!=1) 
-		{
-			out.println("null");
-			out.flush();
-			
-		}
-		else 
+		if(nbBouclesRecursives==1) 
 		{
 			System.out.println("finRacine"+nbBouclesRecursives);
 			out.println("finRacine"+nbBouclesRecursives);
@@ -178,11 +183,5 @@ public class Maitre  extends Transferable implements Runnable{
 			in.close();
 			out.close();
 		}
-}
- 
-
-
-	private void pull(File f)throws IOException {        
-        transfert(_socket.getInputStream(),new FileOutputStream(f),true); 
-	}
+	} 
 }
