@@ -111,11 +111,12 @@ public class ClientManager extends Transferable implements Runnable {
 				do
 				{
 					System.out.println("la");
-					message=br.readLine();
-					System.out.println(message);
-					if(message!=null && message.equals("finRacine1"))
+					
+					
+					if(message.equals("finRacine1"))
 						enCour = false;
-					else if (message!=null && !message.equals("null"))
+					
+					else if (!message.equals("null"))
 					{	
 						nom=message.split("  ")[0];
 						type=message.split("  ")[1];
@@ -125,24 +126,29 @@ public class ClientManager extends Transferable implements Runnable {
 						if(type.equals("dir"))
 						{
 							File f = new File(nom);
-							f.mkdir();
+							f.mkdirs();
 						}
 						else
 						{
 							File f = new File(nom);
 							f.createNewFile();
-							if(f.lastModified()!=lm)
+							if(f.lastModified()==lm)
 							{
 								System.out.println("OK");
-								rep.println("OK");
-								rep.flush();
+								output.write("OK".getBytes());
+								output.flush();
 							}
 							else
 							{
 								System.out.println("PASOK");
-								rep.println("PASOK");
-								rep.flush();
-								pull(f);
+								output.write("PASOK".getBytes());
+								output.flush();
+								
+								
+								do
+								{
+									pull(f);
+								}while(!message.equals("null"));
 								
 								f.setLastModified(lm);
 							}

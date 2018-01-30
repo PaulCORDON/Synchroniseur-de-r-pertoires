@@ -144,7 +144,7 @@ public class Maitre  extends Transferable implements Runnable{
 					out.println(list[i].getAbsolutePath() + "  dir  " + list[i].lastModified());
 					out.flush();
 					
-					envoi(list[i], out,in);
+					envoi(list[i],out,in);
 				}
 				else 
 				{

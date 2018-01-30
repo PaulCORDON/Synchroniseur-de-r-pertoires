@@ -22,7 +22,7 @@ public class Client {
 	
 	public static void main(String[] args) throws InterruptedException{	
 		
-		//new Client("50").infoRepo();
+		
 		
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Quel est votre ID?");
@@ -35,7 +35,7 @@ public class Client {
 		try
 		{
 			_port   = (args.length == 1) ? Integer.parseInt(args[0]) : 8099;
-			_socket = new Socket((String) null, _port);
+			_socket = new Socket("172.18.50.129", _port);
 			
 			// Open stream
 			input = _socket.getInputStream();
