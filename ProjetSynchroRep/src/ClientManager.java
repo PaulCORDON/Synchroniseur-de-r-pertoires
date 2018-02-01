@@ -112,6 +112,13 @@ public class ClientManager extends Transferable implements Runnable {
 					System.out.println("la");
 					message = br.readLine();
 					
+					message = "";
+					for (byte b : data)
+					{
+						message += (char)b;
+					}
+					System.out.println(message);
+					
 					if(message.equals("finRacine1"))
 						enCour = false;
 					
@@ -183,12 +190,6 @@ public class ClientManager extends Transferable implements Runnable {
 				System.out.println("choix client : " + choix);
 				break;
 			}
-			
-			
-			
-			
-			
-			
 		}
 		catch(Exception e){
 			System.out.println(e.toString());

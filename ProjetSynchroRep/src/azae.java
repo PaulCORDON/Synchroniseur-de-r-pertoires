@@ -109,6 +109,7 @@ public class azae
 					{	
 						while((message=br.readLine())!=null) 
 						{
+							message += "\n";
 							out.write(message.getBytes());
 							out.flush();
 						}
