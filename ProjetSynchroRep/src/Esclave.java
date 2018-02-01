@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.Semaphore;
+
 
 public class Esclave extends Transferable implements Runnable{
 	String id;

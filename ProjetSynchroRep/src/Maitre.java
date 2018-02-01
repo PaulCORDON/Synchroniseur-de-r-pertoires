@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.Semaphore;
 
 public class Maitre  extends Transferable implements Runnable{
 	static int compteur=1;
