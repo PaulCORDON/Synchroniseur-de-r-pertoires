@@ -22,9 +22,8 @@ public class Maitre  extends Transferable implements Runnable{
 	String derniereModif;
 	Long lm;
 	File racine;
-	Semaphore semaphore;
-	Semaphore semaphoreBloquantLesNouveauxArrivant;
-	Maitre(String st,BufferedReader r,PrintWriter w,Socket s,Semaphore se,Semaphore sb) {		
+
+	Maitre(String st,BufferedReader r,PrintWriter w,Socket s) {		
 		id=st;
 		br=r;
 		bw=w;
@@ -36,8 +35,7 @@ public class Maitre  extends Transferable implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		semaphore=se;
-		semaphoreBloquantLesNouveauxArrivant=sb;
+
 	}
 	
 	public void run(){
@@ -65,7 +63,7 @@ public class Maitre  extends Transferable implements Runnable{
 		try {
 		switch (y) {
 		case 1: 	// Récuperer un fichier en mode supression
-			semaphore.acquire();
+			Client.s.acquire();
 			racine =  new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			viderDossier(racine);
 			
@@ -145,12 +143,12 @@ public class Maitre  extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-			semaphore.release();
+			Client.s.release();
 			break;
 
 			
 		case 2:		//Recuperer un fichier en mode watchdog
-			semaphore.acquire();
+			Client.s.acquire();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			racine.mkdirs();
 			
@@ -226,10 +224,10 @@ public class Maitre  extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-			semaphore.release();
+			Client.s.release();
 			break;		
 		case 3:		//Recuperer un fichier en mode ecrasement
-			semaphore.acquire();
+			Client.s.acquire();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			racine.mkdirs();
 			
@@ -305,16 +303,16 @@ public class Maitre  extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-			semaphore.release();
+			Client.s.release();
 			break;
 			
 		case 4:
 			try {
-				semaphoreBloquantLesNouveauxArrivant.acquire();
-				semaphore.acquire();
+				Client.semaphoreBloquantLesNouveauxArrivant.acquire();
+				Client.s.acquire();
 				envoi(f,buffOut,buffInf,compteur);
-				semaphore.release();
-				semaphoreBloquantLesNouveauxArrivant.release();
+				Client.s.release();
+				Client.semaphoreBloquantLesNouveauxArrivant.release();
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -326,11 +324,11 @@ public class Maitre  extends Transferable implements Runnable{
 			
 		case 5:
 			try {
-				semaphoreBloquantLesNouveauxArrivant.acquire();
-				semaphore.acquire();
+				Client.semaphoreBloquantLesNouveauxArrivant.acquire();
+				Client.s.acquire();
 				envoi(f,buffOut,buffInf,compteur);
-				semaphore.release();
-				semaphoreBloquantLesNouveauxArrivant.release();
+				Client.s.release();
+				Client.semaphoreBloquantLesNouveauxArrivant.release();
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -342,11 +340,17 @@ public class Maitre  extends Transferable implements Runnable{
 			
 		case 6:
 			try {
-				semaphoreBloquantLesNouveauxArrivant.acquire();
-				semaphore.acquire();
-				envoi(f,buffOut,buffInf,compteur);
-				semaphore.release();
-				semaphoreBloquantLesNouveauxArrivant.release();
+				Thread.sleep(2000);
+				System.out.println("j'attend");
+				Thread.sleep(2000);
+				Client.semaphoreBloquantLesNouveauxArrivant.acquire();
+				System.out.println("je rattend");
+				Client.s.acquire();
+				envoi(f,buffOut,buffInf,compteur);				
+				Client.s.release();
+				System.out.println("j'attend plus");
+				Client.semaphoreBloquantLesNouveauxArrivant.release();
+				System.out.println("je rattend plus");
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -393,6 +397,9 @@ public class Maitre  extends Transferable implements Runnable{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
 		}
 	}
 	private void viderDossier(File f2) {

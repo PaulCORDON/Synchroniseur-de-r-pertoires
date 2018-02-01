@@ -53,13 +53,12 @@ public class Client {
 			semaphoreBloquantLesNouveauxArrivant.acquire();
 			semaphoreBloquantLesNouveauxArrivant.release();
 			if(lu.equals("maitre")) {
-				Maitre maitre=new Maitre(cl.id,br,bw,_socket,s,semaphoreBloquantLesNouveauxArrivant);
-				Thread thread = new Thread(maitre);
-				
+				Maitre maitre=new Maitre(cl.id,br,bw,_socket);
+				Thread thread = new Thread(maitre);				
 				thread.start();
 			}
 			else if(lu.equals("esclave")) {
-				Esclave esclave=new Esclave(cl.id,br,bw,_socket,s);
+				Esclave esclave=new Esclave(cl.id,br,bw,_socket);
 				Thread thread = new Thread(esclave);
 				thread.start();
 			}

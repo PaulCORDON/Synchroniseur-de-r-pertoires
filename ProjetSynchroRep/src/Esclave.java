@@ -22,13 +22,12 @@ public class Esclave extends Transferable implements Runnable{
 	String derniereModif;
 	Long lm;
 	File racine;
-	Semaphore semaphore;
-	public Esclave(String st,BufferedReader r,PrintWriter w,Socket s,Semaphore se) {		
+
+	public Esclave(String st,BufferedReader r,PrintWriter w,Socket s) {		
 		id=st;
 		br=r;
 		bw=w;
 		_socket=s;
-		semaphore=se;
 		try {
 			buffOut= _socket.getOutputStream();
 			buffInf= _socket.getInputStream();
@@ -51,7 +50,8 @@ public class Esclave extends Transferable implements Runnable{
 		try {
 		switch (y) {
 		case 1:
-			semaphore.acquire();
+			Client.s.acquire();
+			Thread.sleep(10000);
 			bw.print(y);
 			bw.flush();
 			racine =  new File("H:\\Mes documents\\ProgReseauProjet\\racine");
@@ -133,10 +133,10 @@ public class Esclave extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-			semaphore.release();
+			Client.s.release();
 			break;
 		case 2:
-			semaphore.acquire();
+			Client.s.acquire();
 			bw.print(y);
 			bw.flush();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
@@ -214,10 +214,10 @@ public class Esclave extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-			semaphore.release();
+			Client.s.release();
 			break;		
 		case 3:
-			semaphore.acquire();
+			Client.s.acquire();
 			bw.print(y);
 			bw.flush();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
@@ -295,7 +295,7 @@ public class Esclave extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-			semaphore.release();
+			Client.s.release();
 			break;	
 		default:
 			break;
@@ -305,6 +305,9 @@ public class Esclave extends Transferable implements Runnable{
 			_socket.close();
 		} catch (IOException e) {
 			
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
