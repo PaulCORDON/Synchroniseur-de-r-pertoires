@@ -14,23 +14,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 
 public class Transferable {
 	
 	protected String repository;
 	Socket _socket;
-	protected void pull(File f)throws IOException {        
-		transfert(_socket.getInputStream(),new FileOutputStream(f),true); 
-	}
-	protected void push(File f)throws IOException {	  
-        transfert(new FileInputStream(f),_socket.getOutputStream(),true);
-	}
-	
 	//affiche les infos sur son repertoire
 	public String infoRepo(){
 		String line= null;
@@ -64,102 +53,7 @@ public class Transferable {
 			return retour;
 		}
 	}
-	
-	//envoie les infos sur son repertoire a son processus interlocuteur
-	/*public String infoRepo(PrintWriter pw) {
-		String retour = null;
-		String line=null;
-		try{
-			//Path chemin = Paths.get(repository);
-			
-			Path roots = FileSystems.getDefault().getPath(repository);
-			//Maintenant, il ne nous reste plus qu'a parcourir
-			
-			  pw.println(roots);
-			  //Pour lister un repertoire, il faut utiliser l'objet DirectoryStream
-			  //L'objet Files permet de creer ce type d'objet afin de pouvoir l'utiliser
-			  try(DirectoryStream<Path> listing = Files.newDirectoryStream(roots)){
-			    int i = 0;
-			    for(Path nom : listing){
-			    	if(Files.size(nom)>0){
-			    		line = "\t\t" + (Files.isDirectory(nom)) != null ? nom+"/" : nom + " "+Files.size(nom)+"octets "+Files.getLastModifiedTime(nom)+"\n";
-			    		retour += line;
-					    pw.print(line);
-					    i++;
-					    if(i%4 == 0)System.out.println("\n");
-			    	}
-			    }
-			    pw.println("end");
-			  } catch (IOException e) {
-				  e.printStackTrace();
-			  }
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally {
-			return retour;
-		}
-	}*/
-	
-	public void envoi(int mode, String file, PrintWriter out, BufferedReader in) {
-		String message;
-		File f = new File(file);
-		for(File subFile : f.listFiles()) {
-				if(subFile.isDirectory()) {
-					out.println(subFile.getAbsolutePath() + "  dir  " + subFile.lastModified());
-					out.flush();
-					envoi(mode, subFile.getAbsolutePath(), out, in);
-				}else {
-					out.println(subFile.getAbsolutePath() + "  file  " + subFile.lastModified());
-					out.flush();
-					
-					try {
-						message = in.readLine();
-						if(message.equals("PASOK")) {
-							BufferedReader br = new BufferedReader(new FileReader(subFile));
-							//transfert(in,out, true);
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					
-				}
-		}
-	}
-	
-	public void push(OutputStream os) {
-		//transfert(new FileInputStream(repository))
-	}
-	
-	 public void transfert(InputStream in, OutputStream out, boolean closeOnExit) throws IOException
-	    {
-	        byte buf[] = new byte[1024];
-	        System.out.println("buffer :" +buf[1]);
-	        int n;
-	        while((n=in.read(buf))!=-1)
-	            out.write(buf,0,n);
-	        
-	        if (closeOnExit)
-	        {
-	            in.close();
-	            out.close();
-	        }
-	    }
-	
-	public boolean send(PrintWriter pw, BufferedReader br, int Mode) {		//permet de mettre à jour le dossier de l'interracteur (l'autre processus avec lequel celui ci discute)
-		String selfInfo, otherInfo;
-		selfInfo = infoRepo();
-		otherInfo = null;
-		if(selfInfo.equals(otherInfo)) {
-			return true;
-		}else {
-			boolean finish = false;
-			while(finish = false) {
-				
-			}
-		}
-		return true;
-	}
+
 	
 	public boolean setRepo(Scanner sc) {
 		System.out.println("Sélection du répertoire");
@@ -172,4 +66,100 @@ public class Transferable {
         	return false;
         }
 	}
+	public static void envoi(File f, OutputStream out, InputStream in,int compte) throws IOException {
+		int compteurcourrant = compte++;
+		
+		int taille;
+		String message;
+		byte[] data = new byte[1024];
+		FileInputStream fis;
+
+		File[] list = f.listFiles();
+		
+		if(list.length>0) 
+		{
+			for(int i=0; i<list.length; i++) 
+			{
+				if(list[i].isDirectory())
+				{
+					message = list[i].getAbsolutePath() + "  dir  " + list[i].lastModified();
+					out.write(message.getBytes());
+					out.flush();
+					
+					envoi(list[i], out,in,compte);
+				}
+				else 
+				{
+					fis= new FileInputStream(list[i]);
+					
+					message = list[i].getAbsolutePath() + "  file  " + list[i].lastModified();
+					out.write(message.getBytes());
+					out.flush();
+					
+					while(in.available()<=0);
+					taille=in.read(data);
+					message = "";
+					for (int j = 0 ;j<taille;j++)
+					{
+						message += (char)data[j];
+					}
+					System.out.println(message);
+					
+					if(message.equals("PASOK"))
+					{	
+						while(fis.available()>0) 
+						{
+							taille=fis.read(data);
+							out.write(data,0,taille);
+							out.flush();
+						}
+						
+						message = "null";
+						
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						out.write(message.getBytes());
+						out.flush();
+						
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					fis.close();
+				}			
+			}
+		}
+		System.out.println("fin de l'envoi " + compteurcourrant);
+		if(compteurcourrant!=1) 
+		{
+			message = "null";
+			out.write(message.getBytes());
+			out.flush();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		else 
+		{
+			System.out.println("finRacine"+compteurcourrant);
+			message = "finRacine"+compteurcourrant;
+			out.write(message.getBytes());
+			out.flush();
+			in.close();
+			out.close();
+		}
+}
+	
 }

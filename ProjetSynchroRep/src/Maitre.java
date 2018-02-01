@@ -1,9 +1,9 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -13,6 +13,14 @@ public class Maitre  extends Transferable implements Runnable{
 	String id;
 	BufferedReader br;
 	PrintWriter bw;
+	OutputStream buffOut;
+	InputStream buffInf;
+	String message = "";	
+	String nom;
+	String type;
+	String derniereModif;
+	Long lm;
+	File racine;
 	
 	
 	Maitre(String st,BufferedReader r,PrintWriter w,Socket s) {		
@@ -20,9 +28,20 @@ public class Maitre  extends Transferable implements Runnable{
 		br=r;
 		bw=w;
 		_socket=s;
+		try {
+			buffOut= _socket.getOutputStream();
+			buffInf= _socket.getInputStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void run(){
+		byte[] data = new byte[1024];
+		boolean enCour = true;
+		int taille;
 		File f= new File("H:/Mes documents/4A/TestReseau/Maitre");
 		f.mkdirs();
 		Scanner sc=new Scanner(System.in);
@@ -38,39 +57,257 @@ public class Maitre  extends Transferable implements Runnable{
 				+ "\n8 : Sélectionner le répertoire"
 				+ "\n9 : Afficher les informations de l'autre répertoire");
 
-		int i=sc.nextInt();
-		bw.print(i);
-		bw.flush();
-		switch (i) {
-		case 1: 	// Rï¿½cuperer un fichier en mode supression
+		int y=sc.nextInt();
+		bw.print(y);
+		bw.flush();	
+		try {
+		switch (y) {
+		case 1: 	// Récuperer un fichier en mode supression
+			racine =  new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+			viderDossier(racine);
 			
-			/*try {
+			racine.mkdirs();
+		
+			do
+			{
+				System.out.println("la");
 				
 				
-				push(fenv);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}*/
+					while(buffInf.available()<=0);
+				 
+				taille=buffInf.read(data);
+				message = "";
+				for (int i = 0;i<taille;i++)
+				{
+					message += (char)data[i];
+				}
+				System.out.println(message);
+				
+				if(message.equals("finRacine1"))
+					enCour = false;
+				
+				else if (!message.equals("null"))
+				{	
+					nom=message.split("  ")[0];
+					type=message.split("  ")[1];
+					derniereModif = message.split("  ")[2];
+					lm=Long.valueOf(derniereModif);
+					
+					if(type.equals("dir"))
+					{
+						f = new File(nom);
+						f.mkdirs();
+					}
+					else
+					{
+						f = new File(nom);
+						f.createNewFile();
+						if(f.lastModified()==lm)
+						{
+							System.out.println("OK");
+							buffOut.write("OK".getBytes());
+							buffOut.flush();
+						}
+						else
+						{
+							System.out.println("PASOK");
+							buffOut.write("PASOK".getBytes());
+							buffOut.flush();
+							
+							FileOutputStream fos= new FileOutputStream(f);
+							do
+							{
+								System.out.println("ici");
+								while(buffInf.available()<=0);
+								taille=buffInf.read(data);
+								message = "";
+								for (int i = 0;i<taille;i++)
+								{
+									message += (char)data[i];
+								}
+								System.out.println(message);
+								
+								if(!message.equals("null"))
+								{
+										fos.write(data,0,taille);
+										fos.flush();
+								}
+							}while(!message.equals("null"));
+							fos.close();
+							
+							f.setLastModified(lm);
+						}
+					}
+				}
+				System.out.println(enCour);
+				
+			}while(enCour);
+
 			break;
+
+			
 		case 2:		//Recuperer un fichier en mode watchdog
 
-			/*try {
+			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+			racine.mkdirs();
+			
+			do
+			{
+				System.out.println("la");
 				
-				pull(f);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} 
-			*/
+				while(buffInf.available()<=0);
+				taille=buffInf.read(data);
+				message = "";
+				for (int i = 0;i<taille;i++)
+				{
+					message += (char)data[i];
+				}
+				System.out.println(message);
+				
+				if(message.equals("finRacine1"))
+					enCour = false;
+				
+				else if (!message.equals("null"))
+				{	
+					nom=message.split("  ")[0];
+					type=message.split("  ")[1];
+					derniereModif = message.split("  ")[2];
+					lm=Long.valueOf(derniereModif);
+					
+					if(type.equals("dir"))
+					{
+						f = new File(nom);
+						f.mkdirs();
+					}
+					else
+					{
+						f = new File(nom);
+						f.createNewFile();
+						if(f.lastModified()<=lm)
+						{
+							System.out.println("OK");
+							buffOut.write("OK".getBytes());
+							buffOut.flush();
+						}
+						else
+						{
+							System.out.println("PASOK");
+							buffOut.write("PASOK".getBytes());
+							buffOut.flush();
+							
+							FileOutputStream fos= new FileOutputStream(f);
+							do
+							{
+								System.out.println("ici");
+								while(buffInf.available()<=0);
+								taille=buffInf.read(data);
+								message = "";
+								for (int i = 0;i<taille;i++)
+								{
+									message += (char)data[i];
+								}
+								System.out.println(message);
+								
+								if(!message.equals("null"))
+								{
+										fos.write(data,0,taille);
+										fos.flush();
+								}
+							}while(!message.equals("null"));
+							fos.close();
+							
+							f.setLastModified(lm);
+						}
+					}
+				}
+				System.out.println(enCour);
+				
+			}while(enCour);
+
 			break;		
 		case 3:		//Recuperer un fichier en mode ecrasement
 
+			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+			racine.mkdirs();
+			
+			do
+			{
+				System.out.println("la");
+				
+				while(buffInf.available()<=0);
+				taille=buffInf.read(data);
+				message = "";
+				for (int i = 0;i<taille;i++)
+				{
+					message += (char)data[i];
+				}
+				System.out.println(message);
+				
+				if(message.equals("finRacine1"))
+					enCour = false;
+				
+				else if (!message.equals("null"))
+				{	
+					nom=message.split("  ")[0];
+					type=message.split("  ")[1];
+					derniereModif = message.split("  ")[2];
+					lm=Long.valueOf(derniereModif);
+					
+					if(type.equals("dir"))
+					{
+						f = new File(nom);
+						f.mkdirs();
+					}
+					else
+					{
+						f = new File(nom);
+						f.createNewFile();
+						if(f.lastModified()==lm)
+						{
+							System.out.println("OK");
+							buffOut.write("OK".getBytes());
+							buffOut.flush();
+						}
+						else
+						{
+							System.out.println("PASOK");
+							buffOut.write("PASOK".getBytes());
+							buffOut.flush();
+							
+							FileOutputStream fos= new FileOutputStream(f);
+							do
+							{
+								System.out.println("ici");
+								while(buffInf.available()<=0);
+								taille=buffInf.read(data);
+								message = "";
+								for (int i = 0;i<taille;i++)
+								{
+									message += (char)data[i];
+								}
+								System.out.println(message);
+								
+								if(!message.equals("null"))
+								{
+										fos.write(data,0,taille);
+										fos.flush();
+								}
+							}while(!message.equals("null"));
+							fos.close();
+							
+							f.setLastModified(lm);
+						}
+					}
+				}
+				System.out.println(enCour);
+				
+			}while(enCour);
+			
 			break;
 			
 		case 4:
 			try {
-				envoi(f,bw,br);
+				envoi(f,buffOut,buffInf,compteur);
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -79,7 +316,7 @@ public class Maitre  extends Transferable implements Runnable{
 			
 		case 5:
 			try {
-				envoi(f,bw,br);
+				envoi(f,buffOut,buffInf,compteur);
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -88,14 +325,14 @@ public class Maitre  extends Transferable implements Runnable{
 			
 		case 6:
 			try {
-				envoi(f,bw,br);
+				envoi(f,buffOut,buffInf,compteur);
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 			break;	
 			
-		case 7 :	//Afficher des informations sur le rï¿½pertoire sï¿½lectionnï¿½
+		case 7 :	//Afficher des informations sur le répertoire sélectionné
 			infoRepo();
 			System.out.println("coucou");
 			try {
@@ -106,7 +343,7 @@ public class Maitre  extends Transferable implements Runnable{
 			}
 			break;
 			
-		case 8 :	//Sï¿½lectionner le rï¿½pertoire
+		case 8 :	//Sélectionner le répertoire
 			setRepo(sc);
 			System.out.println(repository);
 			try {
@@ -117,71 +354,29 @@ public class Maitre  extends Transferable implements Runnable{
 			}
 			break;
 			
-		case 9 :	//Afficher les informations de l'autre rï¿½pertoire
+		case 9 :	//Afficher les informations de l'autre répertoire
 			
 			break;
 			
 		default:
-			System.out.println(i);
+			System.out.println(y);
 			break;
 		}	
+		
 		sc.close();	
-		try {
+		
 			_socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
-	public void envoi(File f, PrintWriter out, BufferedReader in) throws IOException 
-	{
-		int nbBouclesRecursives = compteur++;
-		
-		String rep;
-		BufferedReader br;
-
-		File[] list = f.listFiles();
-		
-		if(list.length>0) 
+	private void viderDossier(File f2) {
+		for (File f: f2.listFiles())
 		{
-			for(int i=0; i<list.length; i++) 
-			{
-				if(list[i].isDirectory())
-				{
-					out.println(list[i].getAbsolutePath() + "  dir  " + list[i].lastModified());
-					out.flush();
-					
-					envoi(list[i],out,in);
-				}
-				else 
-				{
-					br= new BufferedReader(new FileReader(list[i]));
-					
-					out.println(list[i].getAbsolutePath() + "  file  " + list[i].lastModified());
-					out.flush();
-					
-					rep = in.readLine();
-					System.out.println(rep);
-					if(rep.equals("PASOK"))
-					{	
-						push(f);
-					}
-					br.close();
-				}			
-			}
-		}
-		System.out.println("fin de l'envoi " + nbBouclesRecursives);
-		if(nbBouclesRecursives==1) 
-		{
-			System.out.println("finRacine"+nbBouclesRecursives);
-			out.println("finRacine"+nbBouclesRecursives);
-			out.flush();
-			in.close();
-			out.close();
-		}
-	} 
+			if(f.isDirectory()) viderDossier(f);
+			f.delete();
+		}	
+	}
+	
 }

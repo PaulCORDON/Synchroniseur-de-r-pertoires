@@ -36,7 +36,7 @@ public class Client {
 		try
 		{
 			_port   = (args.length == 1) ? Integer.parseInt(args[0]) : 8099;
-			_socket = new Socket("172.18.50.129", _port);
+			_socket = new Socket("172.18.50.114", _port);
 			
 			// Open stream
 			input = _socket.getInputStream();

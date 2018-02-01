@@ -20,14 +20,17 @@ public class ClientManager extends Transferable implements Runnable {
 	String type;
 	String derniereModif;
 	Long lm;
-
+	File racine;
 	public ClientManager(Socket cl) {
 		_socket=cl;		
 	}
 	
 	public void run(){
-		File repert= new File("H:/Mes documents/4A/TestReseau/Maitre");
-		
+		int compteur=1;
+		byte[] data = new byte[1024];
+		boolean enCour = true;
+		File f= new File("H:\\Mes documents\\ProgReseauProjet\\racine");;
+		int taille;
 		/*On remplit la liste de compte utilisateur*/
 		try {
 			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -89,33 +92,31 @@ public class ClientManager extends Transferable implements Runnable {
 				
 			switch (choix) {
 			case 1:
-				pull(repert);
-				System.out.println("reception");
+				envoi(f,output,input,compteur);
 				break;
-
+				
 			case 2:
-				push(repert);
-				System.out.println("envois");
+				envoi(f,output,input,compteur);
 				break;
 			case 3:
-				push(repert);
-				System.out.println("envois");
+				envoi(f,output,input,compteur);
 				break;
 			case 4:
-				viderDossier(repert);
+				racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+				viderDossier(racine);
 				
-				repert.mkdirs();
+				racine.mkdirs();
 				
-				boolean enCour = true;
 				do
 				{
 					System.out.println("la");
-					message = br.readLine();
 					
+					while(input.available()<=0);
+					taille=input.read(data);
 					message = "";
-					for (byte b : data)
+					for (int i = 0;i<taille;i++)
 					{
-						message += (char)b;
+						message += (char)data[i];
 					}
 					System.out.println(message);
 					
@@ -123,7 +124,7 @@ public class ClientManager extends Transferable implements Runnable {
 						enCour = false;
 					
 					else if (!message.equals("null"))
-					{
+					{	
 						nom=message.split("  ")[0];
 						type=message.split("  ")[1];
 						derniereModif = message.split("  ")[2];
@@ -131,12 +132,12 @@ public class ClientManager extends Transferable implements Runnable {
 						
 						if(type.equals("dir"))
 						{
-							File f = new File(nom);
+							f = new File(nom);
 							f.mkdirs();
 						}
 						else
 						{
-							File f = new File(nom);
+							f = new File(nom);
 							f.createNewFile();
 							if(f.lastModified()==lm)
 							{
@@ -150,11 +151,26 @@ public class ClientManager extends Transferable implements Runnable {
 								output.write("PASOK".getBytes());
 								output.flush();
 								
-								
+								FileOutputStream fos= new FileOutputStream(f);
 								do
 								{
-									pull(f);
+									System.out.println("ici");
+									while(input.available()<=0);
+									taille=input.read(data);
+									message = "";
+									for (int i = 0;i<taille;i++)
+									{
+										message += (char)data[i];
+									}
+									System.out.println(message);
+									
+									if(!message.equals("null"))
+									{
+											fos.write(data,0,taille);
+											fos.flush();
+									}
 								}while(!message.equals("null"));
+								fos.close();
 								
 								f.setLastModified(lm);
 							}
@@ -166,24 +182,172 @@ public class ClientManager extends Transferable implements Runnable {
 				
 				break;
 			case 5:
-				push(repert);
-				System.out.println("envois");
+				
+				racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+				racine.mkdirs();
+				
+				do
+				{
+					System.out.println("la");
+					
+					while(input.available()<=0);
+					taille=input.read(data);
+					message = "";
+					for (int i = 0;i<taille;i++)
+					{
+						message += (char)data[i];
+					}
+					System.out.println(message);
+					
+					if(message.equals("finRacine1"))
+						enCour = false;
+					
+					else if (!message.equals("null"))
+					{	
+						nom=message.split("  ")[0];
+						type=message.split("  ")[1];
+						derniereModif = message.split("  ")[2];
+						lm=Long.valueOf(derniereModif);
+						
+						if(type.equals("dir"))
+						{
+							f = new File(nom);
+							f.mkdirs();
+						}
+						else
+						{
+							f = new File(nom);
+							f.createNewFile();
+							if(f.lastModified()<=lm)
+							{
+								System.out.println("OK");
+								output.write("OK".getBytes());
+								output.flush();
+							}
+							else
+							{
+								System.out.println("PASOK");
+								output.write("PASOK".getBytes());
+								output.flush();
+								
+								FileOutputStream fos= new FileOutputStream(f);
+								do
+								{
+									System.out.println("ici");
+									while(input.available()<=0);
+									taille=input.read(data);
+									message = "";
+									for (int i = 0;i<taille;i++)
+									{
+										message += (char)data[i];
+									}
+									System.out.println(message);
+									
+									if(!message.equals("null"))
+									{
+											fos.write(data,0,taille);
+											fos.flush();
+									}
+								}while(!message.equals("null"));
+								fos.close();
+								
+								f.setLastModified(lm);
+							}
+						}
+					}
+					System.out.println(enCour);
+					
+				}while(enCour);
+
 				break;
 			case 6:
-				push(repert);
-				System.out.println("envois");
+				
+				
+				racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+				racine.mkdirs();
+				
+				do
+				{
+					System.out.println("la");
+					
+					while(input.available()<=0);
+					taille=input.read(data);
+					message = "";
+					for (int i = 0;i<taille;i++)
+					{
+						message += (char)data[i];
+					}
+					System.out.println(message);
+					
+					if(message.equals("finRacine1"))
+						enCour = false;
+					
+					else if (!message.equals("null"))
+					{	
+						nom=message.split("  ")[0];
+						type=message.split("  ")[1];
+						derniereModif = message.split("  ")[2];
+						lm=Long.valueOf(derniereModif);
+						
+						if(type.equals("dir"))
+						{
+							f = new File(nom);
+							f.mkdirs();
+						}
+						else
+						{
+							f = new File(nom);
+							f.createNewFile();
+							if(f.lastModified()==lm)
+							{
+								System.out.println("OK");
+								output.write("OK".getBytes());
+								output.flush();
+							}
+							else
+							{
+								System.out.println("PASOK");
+								output.write("PASOK".getBytes());
+								output.flush();
+								
+								FileOutputStream fos= new FileOutputStream(f);
+								do
+								{
+									System.out.println("ici");
+									while(input.available()<=0);
+									taille=input.read(data);
+									message = "";
+									for (int i = 0;i<taille;i++)
+									{
+										message += (char)data[i];
+									}
+									System.out.println(message);
+									
+									if(!message.equals("null"))
+									{
+											fos.write(data,0,taille);
+											fos.flush();
+									}
+								}while(!message.equals("null"));
+								fos.close();
+								
+								f.setLastModified(lm);
+							}
+						}
+					}
+					System.out.println(enCour);
+					
+				}while(enCour);
+				
 				break;
 			case 7:
-				push(repert);
-				System.out.println("envois");
+				
 				break;
 			case 8:
-				push(repert);
-				System.out.println("envois");
+				
 				break;
 			case 9:
-				push(repert);
-				System.out.println("envois");
+				
 				break;
 			
 			default:
