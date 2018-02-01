@@ -219,7 +219,7 @@ public class ClientManager extends Transferable implements Runnable {
 						{
 							f = new File(nom);
 							f.createNewFile();
-							if(f.lastModified()<=lm)
+							if(f.lastModified()>=lm)
 							{
 								System.out.println("OK");
 								output.write("OK".getBytes());
