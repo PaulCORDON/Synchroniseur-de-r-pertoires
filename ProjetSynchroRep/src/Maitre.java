@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 public class Maitre  extends Transferable implements Runnable{
 	static int compteur=1;
@@ -21,9 +22,9 @@ public class Maitre  extends Transferable implements Runnable{
 	String derniereModif;
 	Long lm;
 	File racine;
-	
-	
-	Maitre(String st,BufferedReader r,PrintWriter w,Socket s) {		
+	Semaphore semaphore;
+	Semaphore semaphoreBloquantLesNouveauxArrivant;
+	Maitre(String st,BufferedReader r,PrintWriter w,Socket s,Semaphore se,Semaphore sb) {		
 		id=st;
 		br=r;
 		bw=w;
@@ -35,7 +36,8 @@ public class Maitre  extends Transferable implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		semaphore=se;
+		semaphoreBloquantLesNouveauxArrivant=sb;
 	}
 	
 	public void run(){
@@ -63,6 +65,7 @@ public class Maitre  extends Transferable implements Runnable{
 		try {
 		switch (y) {
 		case 1: 	// Récuperer un fichier en mode supression
+			semaphore.acquire();
 			racine =  new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			viderDossier(racine);
 			
@@ -142,12 +145,12 @@ public class Maitre  extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-
+			semaphore.release();
 			break;
 
 			
 		case 2:		//Recuperer un fichier en mode watchdog
-
+			semaphore.acquire();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			racine.mkdirs();
 			
@@ -183,7 +186,7 @@ public class Maitre  extends Transferable implements Runnable{
 					{
 						f = new File(nom);
 						f.createNewFile();
-						if(f.lastModified()<=lm)
+						if(f.lastModified()>=lm)
 						{
 							System.out.println("OK");
 							buffOut.write("OK".getBytes());
@@ -223,10 +226,10 @@ public class Maitre  extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-
+			semaphore.release();
 			break;		
 		case 3:		//Recuperer un fichier en mode ecrasement
-
+			semaphore.acquire();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			racine.mkdirs();
 			
@@ -236,11 +239,9 @@ public class Maitre  extends Transferable implements Runnable{
 				
 				while(buffInf.available()<=0);
 				taille=buffInf.read(data);
-				System.out.println("aaaaaaaaaaaaaaaa");
 				message = "";
 				for (int i = 0;i<taille;i++)
 				{
-					System.out.println("bbbbbbbbbbbbbbbbbb");
 					message += (char)data[i];
 				}
 				System.out.println(message);
@@ -304,33 +305,54 @@ public class Maitre  extends Transferable implements Runnable{
 				System.out.println(enCour);
 				
 			}while(enCour);
-			
+			semaphore.release();
 			break;
 			
 		case 4:
 			try {
+				semaphoreBloquantLesNouveauxArrivant.acquire();
+				semaphore.acquire();
 				envoi(f,buffOut,buffInf,compteur);
+				semaphore.release();
+				semaphoreBloquantLesNouveauxArrivant.release();
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			break;	
 			
 		case 5:
 			try {
+				semaphoreBloquantLesNouveauxArrivant.acquire();
+				semaphore.acquire();
 				envoi(f,buffOut,buffInf,compteur);
+				semaphore.release();
+				semaphoreBloquantLesNouveauxArrivant.release();
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			break;	
 			
 		case 6:
 			try {
+				semaphoreBloquantLesNouveauxArrivant.acquire();
+				semaphore.acquire();
 				envoi(f,buffOut,buffInf,compteur);
+				semaphore.release();
+				semaphoreBloquantLesNouveauxArrivant.release();
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			break;	
 			

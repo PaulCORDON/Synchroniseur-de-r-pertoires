@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 public class Client {
 
@@ -17,8 +18,8 @@ public class Client {
 	Client(String st){
 		id=st;
 	}
-	
-	
+	static Semaphore s = new Semaphore(1);
+	static Semaphore semaphoreBloquantLesNouveauxArrivant= new Semaphore(1);
 	
 	public static void main(String[] args) throws InterruptedException{	
 		
@@ -49,13 +50,16 @@ public class Client {
 			Thread.sleep(500);
 			lu=br.readLine();
 			System.out.println(lu);
+			semaphoreBloquantLesNouveauxArrivant.acquire();
+			semaphoreBloquantLesNouveauxArrivant.release();
 			if(lu.equals("maitre")) {
-				Maitre maitre=new Maitre(cl.id,br,bw,_socket);
+				Maitre maitre=new Maitre(cl.id,br,bw,_socket,s,semaphoreBloquantLesNouveauxArrivant);
 				Thread thread = new Thread(maitre);
+				
 				thread.start();
 			}
 			else if(lu.equals("esclave")) {
-				Esclave esclave=new Esclave(cl.id,br,bw,_socket);
+				Esclave esclave=new Esclave(cl.id,br,bw,_socket,s);
 				Thread thread = new Thread(esclave);
 				thread.start();
 			}
