@@ -42,7 +42,7 @@ public class Maitre  extends Transferable implements Runnable{
 		byte[] data = new byte[1024];
 		boolean enCour = true;
 		int taille;
-		File f= new File("H:/Mes documents/4A/TestReseau/Maitre");
+		File f= new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 		f.mkdirs();
 		Scanner sc=new Scanner(System.in);
 		
@@ -236,9 +236,11 @@ public class Maitre  extends Transferable implements Runnable{
 				
 				while(buffInf.available()<=0);
 				taille=buffInf.read(data);
+				System.out.println("aaaaaaaaaaaaaaaa");
 				message = "";
 				for (int i = 0;i<taille;i++)
 				{
+					System.out.println("bbbbbbbbbbbbbbbbbb");
 					message += (char)data[i];
 				}
 				System.out.println(message);

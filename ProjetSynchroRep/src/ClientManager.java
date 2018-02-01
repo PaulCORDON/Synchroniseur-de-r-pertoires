@@ -29,7 +29,8 @@ public class ClientManager extends Transferable implements Runnable {
 		int compteur=1;
 		byte[] data = new byte[1024];
 		boolean enCour = true;
-		File f= new File("H:\\Mes documents\\ProgReseauProjet\\racine");;
+		File f= new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+		
 		int taille;
 		/*On remplit la liste de compte utilisateur*/
 		try {
