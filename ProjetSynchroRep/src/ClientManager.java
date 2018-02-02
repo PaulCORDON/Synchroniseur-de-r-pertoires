@@ -13,26 +13,68 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class ClientManager extends Transferable implements Runnable {
+	/*
+	 * liste de tous les utilisateur
+	 */
 	ArrayList<utilisateur> comptes=new ArrayList<utilisateur>();
 
+	/*
+	 * string permetant de récupérer les messages que nous envera l'interlocuteur
+	 */
 	String message = "";	
+	
+	/*
+	 * string permetant de récupérer le nom des fichiers que nous envera l'interlocuteur
+	 */
 	String nom;
+	
+	/*
+	 * string qui contiendra le type de client qu'est l'interlocuteur (esclave,maitre,inconnu)
+	 */
 	String type;
+	
+	/*
+	 * string qui contiendra la date de dernière modification d'un fichier d'un client  
+	 */
 	String derniereModif;
+	/*
+	 * long  qui contiendra la date de dernière modification d'un fichier d'un client
+	 */
 	Long lm;
+	
+	/*
+	 * répertoire racine
+	 */
 	File racine;
+	
+	/**
+	 * Constructeur du client manager
+	 * @param cl socket client
+	 */
 	public ClientManager(Socket cl) {
 		_socket=cl;		
 	}
 	
 	public void run(){
+		/*
+		 * compteur de profondeur de récursivité  
+		 */
 		int compteur=1;
+		
 		byte[] data = new byte[1024];
+		
+		/*
+		 * booléen qui permet de savoir si l'envoi est terminé vrai = en cour d'envoi faux = fin d'envoi
+		 */
 		boolean enCour = true;
+		
+		/*
+		 * chemin du répertoire racine
+		 */
 		File f= new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 		
 		int taille;
-		/*On remplit la liste de compte utilisateur*/
+		/*On remplit la liste d'utilisateur de compte utilisateur*/
 		try {
 			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			final DocumentBuilder builder = factory.newDocumentBuilder();
@@ -88,7 +130,9 @@ public class ClientManager extends Transferable implements Runnable {
 			rep.println(type);
 			rep.flush();
 			
-			
+			/*
+			 * on récupère le choix du client.
+			 */
 			choix=br.read()-48;
 				
 			switch (choix) {
@@ -103,15 +147,22 @@ public class ClientManager extends Transferable implements Runnable {
 				envoi(f,output,input,compteur);
 				break;
 			case 4:
+				/*
+				 * récuperation des données en mode suppression dans racine
+				 */
 				racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+				
+				/*
+				 * on vide le dossier racine
+				 */
 				viderDossier(racine);
 				
 				racine.mkdirs();
-				
+				/*
+				 * on remplit le dossier racine avec ce qu'il y a dans le dossier racine du maitre
+				 */
 				do
 				{
-					System.out.println("la");
-					
 					while(input.available()<=0);
 					taille=input.read(data);
 					message = "";
@@ -155,7 +206,6 @@ public class ClientManager extends Transferable implements Runnable {
 								FileOutputStream fos= new FileOutputStream(f);
 								do
 								{
-									System.out.println("ici");
 									while(input.available()<=0);
 									taille=input.read(data);
 									message = "";
@@ -183,14 +233,19 @@ public class ClientManager extends Transferable implements Runnable {
 				
 				break;
 			case 5:
+				/*
+				 * Récupération du contenu du maitre en mode watchdog
+				 */
 				
+				
+				/*
+				 * On se place dans le répertoire racine
+				 */
 				racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 				racine.mkdirs();
 				
 				do
 				{
-					System.out.println("la");
-					
 					while(input.available()<=0);
 					taille=input.read(data);
 					message = "";
@@ -234,7 +289,6 @@ public class ClientManager extends Transferable implements Runnable {
 								FileOutputStream fos= new FileOutputStream(f);
 								do
 								{
-									System.out.println("ici");
 									while(input.available()<=0);
 									taille=input.read(data);
 									message = "";
@@ -261,16 +315,17 @@ public class ClientManager extends Transferable implements Runnable {
 				}while(enCour);
 
 				break;
+			
 			case 6:
-				
+				/*
+				 * Récupération du contenue du répertoire du maitre en mode écrasement
+				 */
 				
 				racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 				racine.mkdirs();
 				
 				do
-				{
-					System.out.println("la");
-					
+				{					
 					while(input.available()<=0);
 					taille=input.read(data);
 					message = "";
@@ -314,7 +369,6 @@ public class ClientManager extends Transferable implements Runnable {
 								FileOutputStream fos= new FileOutputStream(f);
 								do
 								{
-									System.out.println("ici");
 									while(input.available()<=0);
 									taille=input.read(data);
 									message = "";
@@ -362,7 +416,10 @@ public class ClientManager extends Transferable implements Runnable {
 		
 	}
 
-
+/**
+ * méthode servant à vider le répertoir en paramètre
+ * @param f2 le répertoire à vider
+ */
 	private void viderDossier(File f2) {
 		for (File f: f2.listFiles())
 		{
