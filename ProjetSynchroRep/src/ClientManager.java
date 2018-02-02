@@ -91,6 +91,7 @@ public class ClientManager extends Transferable implements Runnable {
 			}
 		}
 
+		//attrapage d'exception
 		catch (final ParserConfigurationException e) {
 
 			e.printStackTrace();
@@ -410,6 +411,8 @@ public class ClientManager extends Transferable implements Runnable {
 				break;
 			}
 		}
+		
+		//attrapage d'exception
 		catch(Exception e){
 			System.out.println(e.toString());
 		}

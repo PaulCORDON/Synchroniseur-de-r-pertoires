@@ -84,6 +84,8 @@ public class Client {
 				System.out.println("Vous n'etes pas client");
 			}		
 		}
+		
+		//attrapage d'exception
 		catch (UnknownHostException e)
 		{
 			e.printStackTrace();

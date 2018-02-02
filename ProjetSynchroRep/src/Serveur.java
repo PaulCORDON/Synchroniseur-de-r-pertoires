@@ -29,6 +29,8 @@ public class Serveur{
 				thread.start();
 			}
 		}
+		
+		//attrapage d'exception
 		catch (IOException e)
 		{
 			e.printStackTrace();
@@ -41,6 +43,8 @@ public class Serveur{
 		
 
 			}
+			
+			//attrapage d'exception
 			catch (IOException e)
 			{
 				e.printStackTrace();

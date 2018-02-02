@@ -31,6 +31,8 @@ public class Esclave extends Transferable implements Runnable{
 		try {
 			buffOut= _socket.getOutputStream();
 			buffInf= _socket.getInputStream();
+			
+			//attrapage d'exception
 		} catch (IOException e) {
 			
 			e.printStackTrace();
@@ -49,8 +51,10 @@ public class Esclave extends Transferable implements Runnable{
 		int y=sc.nextInt();
 		try {
 		switch (y) {
+		
+		//Recuperer un fichier en mode suppression
 		case 1:
-			Client.s.acquire();
+			Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 			Thread.sleep(10000);
 			bw.print(y);
 			bw.flush();
@@ -79,17 +83,18 @@ public class Esclave extends Transferable implements Runnable{
 				
 				else if (!message.equals("null"))
 				{	
+					//parsing du message qui contient les infos sur le fichier 
 					nom=message.split("  ")[0];
 					type=message.split("  ")[1];
 					derniereModif = message.split("  ")[2];
 					lm=Long.valueOf(derniereModif);
 					
-					if(type.equals("dir"))
+					if(type.equals("dir"))	//si le fichier inspecté est un répertoire, on créer un fichier identique
 					{
 						f = new File(nom);
 						f.mkdirs();
 					}
-					else
+					else	//si le fichier inspecté est présent on le récupère
 					{
 						f = new File(nom);
 						f.createNewFile();
@@ -135,8 +140,10 @@ public class Esclave extends Transferable implements Runnable{
 			}while(enCour);
 			Client.s.release();
 			break;
+			
+		//Recuperer un fichier en mode watchdog
 		case 2:
-			Client.s.acquire();
+			Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 			bw.print(y);
 			bw.flush();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
@@ -160,17 +167,18 @@ public class Esclave extends Transferable implements Runnable{
 				
 				else if (!message.equals("null"))
 				{	
+					//parsing du message qui contient les infos sur le fichier 
 					nom=message.split("  ")[0];
 					type=message.split("  ")[1];
 					derniereModif = message.split("  ")[2];
 					lm=Long.valueOf(derniereModif);
 					
-					if(type.equals("dir"))
+					if(type.equals("dir"))	//si le fichier inspecté est un répertoire, on créer un fichier identique
 					{
 						f = new File(nom);
 						f.mkdirs();
 					}
-					else
+					else	//si le fichier inspecté est présent on le récupère
 					{
 						f = new File(nom);
 						f.createNewFile();
@@ -215,9 +223,11 @@ public class Esclave extends Transferable implements Runnable{
 				
 			}while(enCour);
 			Client.s.release();
-			break;		
+			break;	
+			
+		//Recuperer un fichier en mode suppression
 		case 3:
-			Client.s.acquire();
+			Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 			bw.print(y);
 			bw.flush();
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
@@ -241,17 +251,18 @@ public class Esclave extends Transferable implements Runnable{
 				
 				else if (!message.equals("null"))
 				{	
+					//parsing du message qui contient les infos sur le fichier 
 					nom=message.split("  ")[0];
 					type=message.split("  ")[1];
 					derniereModif = message.split("  ")[2];
 					lm=Long.valueOf(derniereModif);
 					
-					if(type.equals("dir"))
+					if(type.equals("dir"))	//si le fichier inspecté est un répertoire, on créer un fichier identique
 					{
 						f = new File(nom);
 						f.mkdirs();
 					}
-					else
+					else	//si le fichier inspecté est présent on le récupère
 					{
 						f = new File(nom);
 						f.createNewFile();
@@ -303,11 +314,11 @@ public class Esclave extends Transferable implements Runnable{
 		sc.close();
 		
 			_socket.close();
-		} catch (IOException e) {
 			
+			//attrapage d'exception
+		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

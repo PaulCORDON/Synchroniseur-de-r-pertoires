@@ -42,8 +42,9 @@ public class Maitre extends Transferable implements Runnable{
 		try {
 			buffOut= _socket.getOutputStream();
 			buffInf= _socket.getInputStream();
+			
+			//attrapage d'exception
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -85,6 +86,7 @@ public class Maitre extends Transferable implements Runnable{
 		//------------------------------------//
 		//Traitement suivant l'option choisie //
 		//------------------------------------//
+			
 		switch (y) {
 		// Récuperer un fichier en mode supression
 		case 1: 	
@@ -127,11 +129,11 @@ public class Maitre extends Transferable implements Runnable{
 						f = new File(nom);
 						f.mkdirs();
 					}
-					else					//si c'est un fichier
+					else					//si c'est un fichier on le copie
 					{
 						f = new File(nom);
 						f.createNewFile();
-						if(f.lastModified()==lm)	//si le fichier inspecté est présent
+						if(f.lastModified()==lm)	//si le fichier inspecté est présent on le récupère
 						{
 							System.out.println("OK");
 							buffOut.write("OK".getBytes());
@@ -176,7 +178,7 @@ public class Maitre extends Transferable implements Runnable{
 
 		//Recuperer un fichier en mode watchdog	
 		case 2:		
-			Client.s.acquire();//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
+			Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			racine.mkdirs();
 			
@@ -198,17 +200,19 @@ public class Maitre extends Transferable implements Runnable{
 				
 				else if (!message.equals("null"))
 				{	
+					//parsing du message qui contient les infos sur le fichier 
 					nom=message.split("  ")[0];
 					type=message.split("  ")[1];
 					derniereModif = message.split("  ")[2];
 					lm=Long.valueOf(derniereModif);
 					
-					if(type.equals("dir"))
+					
+					if(type.equals("dir"))	//si le fichier inspecté est un répertoire, on créer un fichier identique
 					{
 						f = new File(nom);
 						f.mkdirs();
 					}
-					else
+					else	//si le fichier inspecté est présent on le récupère
 					{
 						f = new File(nom);
 						f.createNewFile();
@@ -279,17 +283,18 @@ public class Maitre extends Transferable implements Runnable{
 				
 				else if (!message.equals("null"))
 				{	
+					//parsing du message qui contient les infos sur le fichier 
 					nom=message.split("  ")[0];
 					type=message.split("  ")[1];
 					derniereModif = message.split("  ")[2];
 					lm=Long.valueOf(derniereModif);
 					
-					if(type.equals("dir"))
+					if(type.equals("dir"))	//si le fichier inspecté est un répertoire, on créer un fichier identique
 					{
 						f = new File(nom);
 						f.mkdirs();
 					}
-					else
+					else	//si le fichier inspecté est présent on le récupère
 					{
 						f = new File(nom);
 						f.createNewFile();
@@ -344,13 +349,14 @@ public class Maitre extends Transferable implements Runnable{
 				envoi(f,buffOut,buffInf,compteur);
 				Client.s.release();
 				Client.semaphoreBloquantLesNouveauxArrivant.release();
+				
+				//attrapage d'exception
 			} catch (IOException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 			break;	
 		
 		//Envoi de fichier en mode watchdog
@@ -361,64 +367,34 @@ public class Maitre extends Transferable implements Runnable{
 				envoi(f,buffOut,buffInf,compteur);
 				Client.s.release();
 				Client.semaphoreBloquantLesNouveauxArrivant.release();
+				
+				//attrapage d'exception
 			} catch (IOException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 			break;	
 			
 		//Envoi de fichier en mode écrasement
 		case 6:
 			try {
-				Thread.sleep(2000);
-				System.out.println("j'attend");
-				Thread.sleep(2000);
 				Client.semaphoreBloquantLesNouveauxArrivant.acquire();
-				System.out.println("je rattend");
 				Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 				envoi(f,buffOut,buffInf,compteur);				
 				Client.s.release();
-				System.out.println("j'attend plus");
 				Client.semaphoreBloquantLesNouveauxArrivant.release();
-				System.out.println("je rattend plus");
+				
+				//attrapage d'exception
 			} catch (IOException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 			break;	
-		/*	
-		case 7 :	//Afficher des informations sur le répertoire sélectionné
-			infoRepo();
-			System.out.println("coucou");
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			break;
-			
-		case 8 :	//Sélectionner le répertoire
-			setRepo(sc);
-			System.out.println(repository);
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			break;
-			
-		case 9 :	//Afficher les informations de l'autre répertoire
-			
-			break;
-			*/
+		
 		default:
 			System.out.println(y);
 			break;
@@ -427,11 +403,11 @@ public class Maitre extends Transferable implements Runnable{
 		sc.close();	
 		
 			_socket.close();
+		
+			//attrapage d'exception	
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e3) {
-			// TODO Auto-generated catch block
 			e3.printStackTrace();
 		}
 	}

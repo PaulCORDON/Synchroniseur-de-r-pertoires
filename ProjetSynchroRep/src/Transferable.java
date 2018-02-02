@@ -41,9 +41,13 @@ public class Transferable {
 					    if(i%4 == 0)System.out.println("\n");
 			    	}
 			    }
+			    
+			  //attrapage d'exception
 			  } catch (IOException e) {
 				  e.printStackTrace();
 			  }
+			  
+			//attrapage d'exception
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally {
@@ -58,6 +62,8 @@ public class Transferable {
         	repository = sc.nextLine()+sc.nextLine();
         	FileSystems.getDefault().getPath(repository);
         	return true;
+        	
+        	//attrapage d'exception
         }catch(Exception e){
         	e.printStackTrace();
         	return false;
@@ -115,8 +121,9 @@ public class Transferable {
 						
 						try {
 							Thread.sleep(500);
+							
+							//attrapage d'exception
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						
@@ -125,8 +132,9 @@ public class Transferable {
 						
 						try {
 							Thread.sleep(500);
+							
+							//attrapage d'exception
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -142,8 +150,9 @@ public class Transferable {
 			out.flush();
 			try {
 				Thread.sleep(500);
+				
+				//attrapage d'exception
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
