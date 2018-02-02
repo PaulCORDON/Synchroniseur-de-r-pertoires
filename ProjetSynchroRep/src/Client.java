@@ -12,6 +12,9 @@ import java.util.concurrent.Semaphore;
 
 public class Client {
 
+	//-----------------------//
+	//Création des variables //
+	//-----------------------//
 	private String id;
 	private static int    _port;
 	private static Socket _socket;
@@ -21,11 +24,16 @@ public class Client {
 	static Semaphore s = new Semaphore(1);
 	static Semaphore semaphoreBloquantLesNouveauxArrivant= new Semaphore(1);
 	
+	
+	//------------------------------------//
+	//Lancement d'un client non identifié //
+	//------------------------------------//
 	public static void main(String[] args) throws InterruptedException{	
 		
-		
-		
-		Scanner sc=new Scanner(System.in);
+		/*
+		 * Récupération de l'identifiant du Client
+		 */
+		Scanner sc=new Scanner(System.in);			
 		System.out.println("Quel est votre ID?");
 		
 		Client cl= new Client(sc.nextLine());
@@ -35,10 +43,15 @@ public class Client {
 		String lu="";
 		try
 		{
+			/*
+			 * connexion au serveur
+			 */
 			_port   = (args.length == 1) ? Integer.parseInt(args[0]) : 8099;
 			_socket = new Socket("172.18.50.114", _port);
 			
-			// Open stream
+			/*
+			 * ouverture des ports avec le serveur 
+			 */
 			input = _socket.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(input));
 			
@@ -48,10 +61,15 @@ public class Client {
 			bw.println(cl.id);
 			bw.flush();
 			Thread.sleep(500);
+			
+			/*
+			 * Identification du client suivant la réponse du serveur
+			 */
 			lu=br.readLine();
 			System.out.println(lu);
 			semaphoreBloquantLesNouveauxArrivant.acquire();
 			semaphoreBloquantLesNouveauxArrivant.release();
+			
 			if(lu.equals("maitre")) {
 				Maitre maitre=new Maitre(cl.id,br,bw,_socket);
 				Thread thread = new Thread(maitre);				
@@ -64,8 +82,7 @@ public class Client {
 			}
 			else{
 				System.out.println("Vous n'etes pas client");
-			}
-					
+			}		
 		}
 		catch (UnknownHostException e)
 		{
@@ -75,8 +92,5 @@ public class Client {
 		{
 			e.printStackTrace();
 		}
-
 	}
-	
-	
 }

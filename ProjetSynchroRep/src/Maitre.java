@@ -8,20 +8,32 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Maitre  extends Transferable implements Runnable{
+public class Maitre extends Transferable implements Runnable{
+	
+	//----------------------//
+	//Création des variables//
+	//----------------------//
+	
 	static int compteur=1;
 	String id;
-	BufferedReader br;
-	PrintWriter bw;
+	BufferedReader br;		//lecteur bufferisé pour la discussion avec le serveur 
+	PrintWriter bw;			//lecteur bufferisé pour la discussion avec le serveur 
 	OutputStream buffOut;
 	InputStream buffInf;
-	String message = "";	
-	String nom;
-	String type;
-	String derniereModif;
-	Long lm;
-	File racine;
+	
+	String message = "";	//contient le code de desciption du fichier en cours d'inspection qu'on parse pour obtenir :
+	String nom;					// - le nom du fichier
+	String type;				// - le type du fichier
+	String derniereModif;		// - la date de dernière modification du fichier
+	Long lm;						//la date de dernière modification sous forme de long int
+	
+	File racine;			//le fichier, avec son chemin, qui subit des modifications
 
+	
+	//------------//
+	//Constructeur//
+	//------------//
+	
 	Maitre(String st,BufferedReader r,PrintWriter w,Socket s) {		
 		id=st;
 		br=r;
@@ -37,13 +49,19 @@ public class Maitre  extends Transferable implements Runnable{
 
 	}
 	
+	//----------------------//
+	//Description du thread //
+	//----------------------//
+	
 	public void run(){
-		byte[] data = new byte[1024];
-		boolean enCour = true;
-		int taille;
+		
+		byte[] data = new byte[1024];	//récupère la donnée qui est sous forme de byte (taille du fichier)
+		boolean enCour = true;			//condition faisant tourner la boucle while
+		int taille;						//la taille du fichier inspecté
 		File f= new File("H:\\Mes documents\\ProgReseauProjet\\racine");
-		f.mkdirs();
-		Scanner sc=new Scanner(System.in);
+		
+		f.mkdirs();						//crée le fichier f et tout les répertoires nécessaire d'après le chemin de f
+		Scanner sc=new Scanner(System.in);	//sert à lire les entrées du clavier
 		
 		System.out.println("Voulez-vous :"
 				+ "\n1 : Récuperer un fichier en mode supression "
@@ -51,30 +69,40 @@ public class Maitre  extends Transferable implements Runnable{
 				+ "\n3 : Recuperer un fichier en mode ecrasement"
 				+ "\n4 : Envoyer un fichier en mode supression"
 				+ "\n5 : Envoyer un fichier en mode watchdog"
-				+ "\n6 : Envoyer un fichier en mode ecrasement"
-				+ "\n7 : Afficher des informations sur le répertoire sélectionné"
-				+ "\n8 : Sélectionner le répertoire"
-				+ "\n9 : Afficher les informations de l'autre répertoire");
+				+ "\n6 : Envoyer un fichier en mode ecrasement");
+				//+ "\n7 : Afficher des informations sur le répertoire sélectionné"
+				//+ "\n8 : Sélectionner le répertoire"
+				//+ "\n9 : Afficher les informations de l'autre répertoire");
 
-		int y=sc.nextInt();
-		bw.print(y);
+		int y=sc.nextInt();		//lecture de la réponse donnée au clavier
+		
+		bw.print(y);			//envoi de cette réponse au client Manager
 		bw.flush();	
+		
+		
 		try {
-		switch (y) {
-		case 1: 	// Récuperer un fichier en mode supression
-			Client.s.acquire();
-			racine =  new File("H:\\Mes documents\\ProgReseauProjet\\racine");
-			viderDossier(racine);
 			
-			racine.mkdirs();
+		//------------------------------------//
+		//Traitement suivant l'option choisie //
+		//------------------------------------//
+		switch (y) {
+		// Récuperer un fichier en mode supression
+		case 1: 	
+			Client.s.acquire();		//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
+			racine =  new File("H:\\Mes documents\\ProgReseauProjet\\racine");
+			
+			viderDossier(racine);	//supression de ce qui existe déjà
+			
+			racine.mkdirs();		//(re)création du chemin racine
 		
 			do
 			{
 				System.out.println("la");
 				
 				
-					while(buffInf.available()<=0);
-				 
+					while(buffInf.available()<=0);	//on attend de recevoir un message
+				
+				
 				taille=buffInf.read(data);
 				message = "";
 				for (int i = 0;i<taille;i++)
@@ -88,21 +116,22 @@ public class Maitre  extends Transferable implements Runnable{
 				
 				else if (!message.equals("null"))
 				{	
+					//parsing du message qui contient les infos sur le fichier 
 					nom=message.split("  ")[0];
 					type=message.split("  ")[1];
 					derniereModif = message.split("  ")[2];
 					lm=Long.valueOf(derniereModif);
 					
-					if(type.equals("dir"))
+					if(type.equals("dir"))	//si le fichier inspecté est un répertoire, on créer un fichier identique 
 					{
 						f = new File(nom);
 						f.mkdirs();
 					}
-					else
+					else					//si c'est un fichier
 					{
 						f = new File(nom);
 						f.createNewFile();
-						if(f.lastModified()==lm)
+						if(f.lastModified()==lm)	//si le fichier inspecté est présent
 						{
 							System.out.println("OK");
 							buffOut.write("OK".getBytes());
@@ -145,9 +174,9 @@ public class Maitre  extends Transferable implements Runnable{
 			Client.s.release();
 			break;
 
-			
-		case 2:		//Recuperer un fichier en mode watchdog
-			Client.s.acquire();
+		//Recuperer un fichier en mode watchdog	
+		case 2:		
+			Client.s.acquire();//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			racine.mkdirs();
 			
@@ -224,9 +253,11 @@ public class Maitre  extends Transferable implements Runnable{
 				
 			}while(enCour);
 			Client.s.release();
-			break;		
-		case 3:		//Recuperer un fichier en mode ecrasement
-			Client.s.acquire();
+			break;	
+			
+		//Recuperer un fichier en mode ecrasement
+		case 3:		
+			Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 			racine = new File("H:\\Mes documents\\ProgReseauProjet\\racine");
 			racine.mkdirs();
 			
@@ -304,11 +335,12 @@ public class Maitre  extends Transferable implements Runnable{
 			}while(enCour);
 			Client.s.release();
 			break;
-			
+		
+		//Envoi de fichier en mode suppression
 		case 4:
 			try {
 				Client.semaphoreBloquantLesNouveauxArrivant.acquire();
-				Client.s.acquire();
+				Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 				envoi(f,buffOut,buffInf,compteur);
 				Client.s.release();
 				Client.semaphoreBloquantLesNouveauxArrivant.release();
@@ -320,11 +352,12 @@ public class Maitre  extends Transferable implements Runnable{
 				e.printStackTrace();
 			}
 			break;	
-			
+		
+		//Envoi de fichier en mode watchdog
 		case 5:
 			try {
 				Client.semaphoreBloquantLesNouveauxArrivant.acquire();
-				Client.s.acquire();
+				Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 				envoi(f,buffOut,buffInf,compteur);
 				Client.s.release();
 				Client.semaphoreBloquantLesNouveauxArrivant.release();
@@ -337,6 +370,7 @@ public class Maitre  extends Transferable implements Runnable{
 			}
 			break;	
 			
+		//Envoi de fichier en mode écrasement
 		case 6:
 			try {
 				Thread.sleep(2000);
@@ -344,7 +378,7 @@ public class Maitre  extends Transferable implements Runnable{
 				Thread.sleep(2000);
 				Client.semaphoreBloquantLesNouveauxArrivant.acquire();
 				System.out.println("je rattend");
-				Client.s.acquire();
+				Client.s.acquire();	//assure grâce à un sémaphore d'être le seul thread pouvant avoir accès aux fichiers du serveur
 				envoi(f,buffOut,buffInf,compteur);				
 				Client.s.release();
 				System.out.println("j'attend plus");
@@ -358,7 +392,7 @@ public class Maitre  extends Transferable implements Runnable{
 				e.printStackTrace();
 			}
 			break;	
-			
+		/*	
 		case 7 :	//Afficher des informations sur le répertoire sélectionné
 			infoRepo();
 			System.out.println("coucou");
@@ -384,7 +418,7 @@ public class Maitre  extends Transferable implements Runnable{
 		case 9 :	//Afficher les informations de l'autre répertoire
 			
 			break;
-			
+			*/
 		default:
 			System.out.println(y);
 			break;
