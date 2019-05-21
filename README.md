@@ -1,1 +1,1 @@
-Synchroniseur-de-r-pertoires
+Synchroniseur-de-repertoires
